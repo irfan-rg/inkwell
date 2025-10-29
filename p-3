@@ -1,0 +1,339 @@
+Create a Supabase client for browser-side use:
+- Import createBrowserClient from @supabase/ssr
+- Get NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY from env
+- Create and export a createClient function that returns a browser client
+- Add proper TypeScript types
+- Include error handling for missing environment variables
+- Add JSDoc comments explaining this is for client components
+```
+
+---
+
+## Part B: Setup Supabase Server Client
+
+**Open `lib/supabase/server.ts` and use this Copilot prompt:**
+```
+Create a Supabase client for server-side use with Next.js 15:
+- Import createServerClient from @supabase/ssr
+- Import cookies from next/headers
+- Get NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY from env
+- Create and export a createClient function that:
+  - Gets the cookie store
+  - Returns a server client with cookie handlers for get/set/remove
+  - Uses the new Next.js 15 async cookies() API
+- Add proper TypeScript types
+- Include JSDoc comments explaining this is for server components and API routes
+```
+
+---
+
+## Part C: Create Auth Helper Functions
+
+**Create `lib/auth.ts` file and use this Copilot prompt:**
+```
+Create authentication helper functions:
+
+1. getUser() - Gets current authenticated user from server
+   - Uses server supabase client
+   - Returns user or null
+   - Includes error handling
+
+2. getSession() - Gets current session from server
+   - Returns session or null
+
+3. signOut() - Signs out user
+   - Uses server supabase client
+   - Redirects to login page
+
+4. requireAuth() - Middleware to protect routes
+   - Checks if user is authenticated
+   - Redirects to /auth/login if not
+   - Returns user if authenticated
+
+Add proper TypeScript types for all functions.
+Add JSDoc comments.
+```
+
+---
+
+## Part D: Setup tRPC Context with Auth
+
+**Open `server/api/trpc.ts` and use this Copilot prompt:**
+```
+Create a complete tRPC setup for Next.js 15 App Router with Supabase authentication:
+
+1. Import necessary tRPC packages (@trpc/server, @trpc/next, etc.)
+2. Import Supabase server client
+3. Import db from server/db
+
+4. Create context function that:
+   - Gets Supabase session from server client
+   - Returns { db, session, user: session?.user || null }
+   - Properly handles async cookies in Next.js 15
+
+5. Create tRPC instance with:
+   - Error formatter using superjson for serialization
+   - Proper error handling
+
+6. Create base procedures:
+   - publicProcedure (no auth required)
+   - protectedProcedure (requires authentication, throws UNAUTHORIZED if not logged in)
+
+7. Create middleware for protected procedures:
+   - Check if ctx.user exists
+   - Throw TRPCError with code 'UNAUTHORIZED' if not
+   - Pass user to next context
+
+Add proper TypeScript types for Context.
+Add JSDoc comments for each procedure.
+Export: createTRPCContext, t, publicProcedure, protectedProcedure, createCallerFactory
+```
+
+---
+
+## Part E: Create tRPC Root Router
+
+**Open `server/api/root.ts` and use this Copilot prompt:**
+```
+Create the root tRPC router:
+- Import t from ./trpc
+- Import routers (post, category, upload) from ./routers (we'll create these next)
+- Create appRouter using t.router that combines:
+  - post: postRouter
+  - category: categoryRouter  
+  - upload: uploadRouter
+- Export appRouter
+- Export type AppRouter for client-side type inference
+- Add JSDoc comments
+```
+
+---
+
+## Part F: Create Post Router (Core CRUD)
+
+**Open `server/api/routers/post.ts` and use this Copilot prompt:**
+```
+Create a comprehensive tRPC post router with:
+
+1. Import dependencies (zod, drizzle, trpc helpers, schema)
+2. Import generateSlug from lib/utils
+3. Import posts, categories, postCategories tables
+
+4. Create input schemas using Zod:
+   - createPostSchema (title, content, coverImage?, excerpt?, published, categoryIds[])
+   - updatePostSchema (id, same as create)
+   - deletePostSchema (id)
+   - getBySlugSchema (slug)
+   - listPostsSchema (published?, categoryId?, authorId?, limit?, offset?)
+
+5. Create procedures:
+
+   a. create (protected):
+      - Input: createPostSchema
+      - Generate slug from title
+      - Insert post with authorId from ctx.user.id
+      - If categoryIds provided, insert into postCategories junction table
+      - Return created post
+
+   b. update (protected):
+      - Input: updatePostSchema
+      - Check if post belongs to current user
+      - Update post
+      - Update categories (delete old, insert new)
+      - Return updated post
+
+   c. delete (protected):
+      - Input: deletePostSchema
+      - Check if post belongs to current user
+      - Delete post (cascade will handle postCategories)
+      - Return success
+
+   d. getBySlug (public):
+      - Input: getBySlugSchema
+      - Get post with categories joined
+      - Only return if published OR belongs to current user
+      - Return post with categories array
+
+   e. list (public):
+      - Input: listPostsSchema
+      - Filter by published status, categoryId, authorId
+      - Order by createdAt desc
+      - Apply limit and offset for pagination
+      - Join categories
+      - Return posts array with categories
+
+   f. getUserPosts (protected):
+      - Get all posts by current user (published + drafts)
+      - Order by updatedAt desc
+      - Return posts array
+
+Include proper error handling with TRPCError.
+Add TypeScript types for all inputs/outputs.
+Add JSDoc comments for each procedure.
+```
+
+---
+
+## Part G: Create Category Router
+
+**Open `server/api/routers/category.ts` and use this Copilot prompt:**
+```
+Create a tRPC category router with:
+
+1. Import dependencies (zod, drizzle, trpc, schema)
+2. Import generateSlug from lib/utils
+
+3. Create input schemas:
+   - createCategorySchema (name, description?)
+   - updateCategorySchema (id, name, description?)
+   - deleteCategorySchema (id)
+   - getBySlugSchema (slug)
+
+4. Create procedures:
+
+   a. create (protected):
+      - Input: createCategorySchema
+      - Generate slug from name
+      - Check if category with slug already exists
+      - Insert category
+      - Return created category
+
+   b. update (protected):
+      - Input: updateCategorySchema
+      - Generate new slug if name changed
+      - Update category
+      - Return updated category
+
+   c. delete (protected):
+      - Input: deleteCategorySchema
+      - Delete category (will cascade to postCategories)
+      - Return success
+
+   d. list (public):
+      - No input needed
+      - Get all categories ordered by name
+      - Return categories array
+
+   e. getBySlug (public):
+      - Input: getBySlugSchema
+      - Get category by slug
+      - Return category or null
+
+Include proper error handling.
+Add TypeScript types.
+Add JSDoc comments.
+```
+
+---
+
+## Part H: Create Upload Router (Image Upload)
+
+**Open `server/api/routers/upload.ts` and use this Copilot prompt:**
+```
+Create a tRPC upload router for Supabase Storage:
+
+1. Import dependencies (zod, trpc, @supabase/supabase-js)
+2. Import Supabase server client
+3. Get SUPABASE_SERVICE_ROLE_KEY from env
+
+4. Create input schema:
+   - uploadImageSchema (file as base64 string, fileName, fileType)
+
+5. Create procedure:
+
+   a. uploadPostCover (protected):
+      - Input: uploadImageSchema
+      - Validate file type (only jpeg, png, webp)
+      - Validate file size (max 5MB when decoded from base64)
+      - Generate unique filename: {userId}/{timestamp}-{fileName}
+      - Upload to Supabase Storage bucket 'post-covers'
+      - Get public URL
+      - Return { url, path }
+
+Include proper error handling for:
+- Invalid file types
+- File too large
+- Upload failures
+
+Add TypeScript types.
+Add JSDoc comments.
+
+Note: We'll handle base64 encoding on the client side before sending to this endpoint.
+```
+
+---
+
+## Part I: Create tRPC API Route Handler
+
+**Open `app/api/trpc/[trpc]/route.ts` and use this Copilot prompt:**
+```
+Create Next.js 15 App Router API route handlers for tRPC:
+
+1. Import fetchRequestHandler from @trpc/server/adapters/fetch
+2. Import appRouter from server/api/root
+3. Import createTRPCContext from server/api/trpc
+
+4. Create handler function that:
+   - Uses fetchRequestHandler
+   - Sets endpoint to /api/trpc
+   - Uses appRouter
+   - Creates context with createTRPCContext
+   - Handles errors appropriately
+
+5. Export as GET and POST handlers for Next.js App Router
+
+Add proper TypeScript types.
+Add error handling.
+```
+
+---
+
+## Part J: Setup tRPC Client
+
+**Create `lib/trpc.ts` and use this Copilot prompt:**
+```
+Create tRPC client setup for React:
+
+1. Import tRPC packages (@trpc/client, @trpc/react-query, @tanstack/react-query)
+2. Import AppRouter type from server/api/root
+3. Import superjson
+
+4. Create tRPC client:
+   - Use httpBatchLink
+   - Point to /api/trpc
+   - Include credentials
+   - Use superjson transformer
+   - Add custom headers (include cookies)
+
+5. Create React Query client with:
+   - Default staleTime: 5 seconds
+   - Default cacheTime: 10 minutes
+
+6. Export:
+   - api (tRPC hooks)
+   - TRPCProvider component that wraps QueryClientProvider + tRPC provider
+
+Add proper TypeScript types.
+Add JSDoc comments.
+```
+
+---
+
+## Part K: Add tRPC Provider to Root Layout
+
+**Open `app/layout.tsx` and use this Copilot prompt:**
+```
+Update the root layout to:
+1. Import TRPCProvider from lib/trpc
+2. Import ThemeProvider from components/theme/ThemeProvider (we'll create this)
+3. Keep existing metadata and inter font
+4. Wrap children with:
+   - TRPCProvider (outermost)
+   - ThemeProvider (for dark mode)
+   - Keep html and body tags
+
+Update metadata to:
+- title: "Inkwell - Share Your Stories"
+- description: "A modern blogging platform for writers and readers"
+
+Add proper TypeScript types for props.
