@@ -15,6 +15,13 @@
       "when": 1761686402474,
       "tag": "0001_magenta_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761747390131,
+      "tag": "0002_wakeful_malice",
+      "breakpoints": true
     }
   ]
 }

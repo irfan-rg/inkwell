@@ -118,13 +118,20 @@ export const postRouter = router({
         });
       }
 
-      // Insert the post
+      // Extract author information from user metadata
+      // Falls back to email username if name is not set
+      const authorName = user.user_metadata?.name || user.email?.split('@')[0] || 'Anonymous';
+      const authorEmail = user.email || '';
+
+      // Insert the post with cached author information
       const [newPost] = await db
         .insert(posts)
         .values({
           ...postData,
           slug,
           authorId: user.id,
+          authorName,
+          authorEmail,
         })
         .returning();
 
@@ -213,6 +220,8 @@ export const postRouter = router({
       }
 
       // Update the post
+      // Note: Author information is cached and doesn't change on update
+      // If user profile changes, posts will keep their original author info
       const [updatedPost] = await db
         .update(posts)
         .set({
@@ -441,4 +450,53 @@ export const postRouter = router({
 
     return userPosts;
   }),
+
+  /**
+   * Get post by ID
+   * 
+   * Protected procedure that retrieves a single post by ID.
+   * User must be the author of the post to access it.
+   * 
+   * @requires Authentication
+   * @input { id: string }
+   * @returns Post with categories
+   * 
+   * @example
+   * ```tsx
+   * const { data: post } = trpc.post.getById.useQuery({ id: 'post-uuid' })
+   * ```
+   */
+  getById: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const { db, user } = ctx;
+
+      const post = await db.query.posts.findFirst({
+        where: eq(posts.id, input.id),
+        with: {
+          postCategories: {
+            with: {
+              category: true,
+            },
+          },
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Post not found',
+        });
+      }
+
+      // Check if user owns the post
+      if (post.authorId !== user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to access this post',
+        });
+      }
+
+      return post;
+    }),
 });

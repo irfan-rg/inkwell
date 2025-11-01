@@ -60,18 +60,25 @@ export async function createTRPCContext(opts?: FetchCreateContextFnOptions) {
     // Create Supabase client with request cookies
     const supabase = await createClient();
     
-    // Get the current session
-    const { data: { session }, error } = await supabase.auth.getSession();
+    // Get the authenticated user (more secure than getSession)
+    const { data: { user }, error } = await supabase.auth.getUser();
     
     if (error) {
-      console.error('Error fetching session in tRPC context:', error.message);
+      console.error('Error fetching user in tRPC context:', error.message);
+    }
+    
+    // Get session for additional info if user exists
+    let session = null;
+    if (user) {
+      const { data: { session: userSession } } = await supabase.auth.getSession();
+      session = userSession;
     }
     
     // Return context with database and auth info
     return {
       db,
       session: session ?? null,
-      user: session?.user ?? null,
+      user: user ?? null,
     } satisfies Context;
   } catch (error) {
     console.error('Error creating tRPC context:', error);

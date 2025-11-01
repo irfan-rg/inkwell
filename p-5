@@ -1,0 +1,507 @@
+Fantastic! 🎉 Now let's build the public-facing blog pages where everyone can read posts!
+
+---
+
+# 🎯 STEP 6: Public Blog Pages (Listing, Individual Post, Filtering)
+
+## Part A: Create Category Filter Component
+
+**Create `components/blog/CategoryFilter.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create a CategoryFilter component for filtering posts by category:
+
+1. Use "use client" directive
+2. Import:
+   - api from lib/trpc
+   - Button from components/ui/button
+   - Badge from components/ui/badge
+   - Skeleton from components/ui/skeleton
+   - Folder, X icons from lucide-react
+
+3. Component props:
+   - selectedCategoryId: string | null
+   - onCategoryChange: (categoryId: string | null) => void
+
+4. Fetch categories using tRPC: api.category.list.useQuery()
+
+5. UI design:
+   - "All Posts" button (selected when no category)
+   - List of category buttons with post counts (optional)
+   - Active category highlighted
+   - Clear filter button (X icon) when category selected
+   - Responsive: horizontal scroll on mobile, grid on desktop
+
+6. Features:
+   - Click category to filter
+   - Click "All Posts" to clear filter
+   - Show loading skeleton while fetching
+   - Show empty state if no categories
+
+7. Style with Tailwind:
+   - Pill-shaped buttons
+   - Active state with accent color
+   - Hover effects
+   - Clean spacing
+
+8. Add proper TypeScript types
+9. Export component
+```
+
+---
+
+## Part B: Create Post List Component
+
+**Create `components/blog/PostList.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create a PostList component for displaying multiple posts:
+
+1. Import:
+   - PostCard from components/blog/PostCard
+   - Skeleton from components/ui/skeleton
+   - FileText icon from lucide-react
+
+2. Component props:
+   - posts: Post[] (with categories and author info)
+   - loading?: boolean
+   - emptyMessage?: string
+
+3. Features:
+   - Grid layout of PostCard components
+   - Loading state: Show skeleton cards
+   - Empty state: Show message with icon
+   - Responsive grid: 1 col mobile, 2 cols tablet, 3 cols desktop
+
+4. Style with Tailwind:
+   - Proper gap between cards
+   - Smooth animations when posts load
+
+5. Add proper TypeScript types
+6. Export component
+```
+
+---
+
+## Part C: Create Search Bar Component
+
+**Create `components/blog/SearchBar.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create a SearchBar component for searching posts:
+
+1. Use "use client" directive
+2. Import:
+   - useState, useEffect from react
+   - Input from components/ui/input
+   - Search, X icons from lucide-react
+   - Button from components/ui/button
+
+3. Component props:
+   - value: string
+   - onChange: (value: string) => void
+   - placeholder?: string
+
+4. Features:
+   - Search input with magnifying glass icon
+   - Clear button (X icon) when text exists
+   - Debounced onChange (300ms delay)
+   - Loading indicator (optional)
+
+5. UI design:
+   - Large, prominent input
+   - Icon on left, clear button on right
+   - Focus state with ring effect
+
+6. Style with Tailwind
+7. Add proper TypeScript types
+8. Export component
+```
+
+---
+
+## Part D: Create Blog Listing Page
+
+**Open `app/(public)/blogs/page.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create the main Blog Listing page:
+
+1. Use "use client" directive
+2. Import:
+   - useState from react
+   - api from lib/trpc
+   - PostList from components/blog/PostList
+   - CategoryFilter from components/blog/CategoryFilter
+   - SearchBar from components/blog/SearchBar
+   - Button from components/ui/button
+   - Separator from components/ui/separator
+
+3. State management:
+   - selectedCategoryId: string | null
+   - searchQuery: string
+   - page: number (for pagination - start with 1)
+
+4. Fetch posts using tRPC:
+   - api.post.list.useQuery with filters:
+     - published: true
+     - categoryId: selectedCategoryId
+     - search: searchQuery (we'll add this to router)
+     - limit: 12
+     - offset: (page - 1) * 12
+
+5. Page layout:
+   - Hero section:
+     - Large heading: "Explore Stories"
+     - Subheading: "Discover insightful articles from our community"
+   - Search bar (prominent)
+   - Category filter chips
+   - Separator
+   - Post count: "Showing X posts"
+   - PostList component
+   - Pagination buttons (Load More or Page numbers)
+
+6. Features:
+   - Filter by category (updates query)
+   - Search posts (updates query)
+   - Clear all filters button
+   - Show loading state during fetch
+   - Show empty state if no posts found
+
+7. Style with Tailwind:
+   - Container with max-width
+   - Proper spacing
+   - Hero section with gradient background
+   - Clean, modern design
+
+8. Add proper TypeScript types
+9. Export as default
+```
+
+---
+
+## Part E: Add Search to Post Router
+
+**Update `server/api/routers/post.ts`:**
+
+**Copilot prompt:**
+
+```
+Update the list procedure in post router to add search functionality:
+
+1. Add 'search' to listPostsSchema:
+   - search: z.string().optional()
+
+2. In the list procedure query:
+   - If search is provided, filter posts where:
+     - title contains search (case-insensitive) OR
+     - content contains search (case-insensitive)
+   - Use SQL ILIKE for case-insensitive search
+   - Use Drizzle's or() and like() functions
+
+3. Keep all existing filters (published, categoryId, etc.)
+4. Keep existing ordering and pagination
+
+Example Drizzle query with search:
+```
+const searchCondition = input.search 
+  ? or(
+      ilike(posts.title, `%${input.search}%`),
+      ilike(posts.content, `%${input.search}%`)
+    )
+  : undefined;
+```
+
+Add proper imports for or, ilike from drizzle-orm.
+```
+
+---
+
+## Part F: Create Individual Post Page
+
+**Open `app/(public)/blogs/[slug]/page.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create the Individual Post View page:
+
+1. Import:
+   - api from lib/trpc
+   - MarkdownRenderer from components/blog/MarkdownRenderer
+   - Badge from components/ui/badge
+   - Avatar from components/ui/avatar
+   - Separator from components/ui/separator
+   - Button from components/ui/button
+   - Image from next/image
+   - Link from next/link
+   - formatDate, calculateReadingTime from lib/utils
+   - getAuthorName, getAuthorInitials from lib/auth-helpers
+   - Calendar, Clock, User, ArrowLeft, Share2 icons from lucide-react
+   - notFound from next/navigation
+
+2. Get slug from params (async in Next.js 15)
+
+3. Fetch post using tRPC: api.post.getBySlug.useQuery({ slug })
+
+4. If post not found, call notFound()
+
+5. Page layout:
+
+   a. Back button (top left): "← Back to Blogs"
+   
+   b. Cover image section:
+      - Full-width hero image (if exists)
+      - Gradient overlay
+      - Post title overlaid on image (large, bold)
+   
+   c. Post header:
+      - Title (if no cover image)
+      - Metadata row:
+        - Author avatar + name
+        - Date published
+        - Reading time
+        - Category badges
+      - Share button (bonus)
+   
+   d. Separator
+   
+   e. Post content:
+      - MarkdownRenderer with full content
+      - Max-width for readability (prose container)
+      - Proper typography
+   
+   f. Footer section:
+      - Categories this post belongs to
+      - "Related Posts" section (bonus - same category)
+      - Share buttons (bonus)
+
+6. Style with Tailwind:
+   - Hero image with proper aspect ratio
+   - Content max-width: 65ch (optimal reading width)
+   - Generous line height
+   - Large, readable font sizes
+   - Proper spacing between sections
+
+7. SEO metadata:
+   - generateMetadata function for dynamic title/description
+   - Include post title, excerpt, cover image
+
+8. Add proper TypeScript types
+9. Export as default
+10. Export generateMetadata function
+```
+
+---
+
+## Part G: Add Related Posts to Post Page
+
+**Update the Individual Post Page to include related posts:**
+
+**Copilot prompt:**
+
+```
+Add a Related Posts section to the individual post page:
+
+1. After the main content, add new section:
+   - Heading: "Related Posts"
+   - Fetch 3 posts from same category (exclude current post)
+   - Use api.post.list.useQuery with:
+     - published: true
+     - categoryId: first category of current post
+     - limit: 3
+
+2. Display using PostCard component with variant="compact"
+
+3. Show in horizontal scroll on mobile, grid on desktop
+
+4. If no related posts, don't show section
+
+5. Add proper loading state
+```
+
+---
+
+## Part H: Create Landing Page Hero Section
+
+**Open `app/(public)/page.tsx` (Landing Page):**
+
+**Copilot prompt:**
+
+```
+Create an impressive Landing Page for Inkwell:
+
+1. Use "use client" directive
+2. Import:
+   - Link from next/link
+   - Button from components/ui/button
+   - api from lib/trpc
+   - PostCard from components/blog/PostCard
+   - PenTool, BookOpen, Users, Sparkles icons from lucide-react
+
+3. Page sections:
+
+   SECTION 1 - HERO:
+   - Large heading: "Share Your Stories with the World"
+   - Subheading: "A modern platform for writers and readers to connect through the power of words"
+   - Two CTA buttons:
+     - "Start Writing" (primary, links to /auth/signup)
+     - "Explore Stories" (secondary, links to /blogs)
+   - Gradient background with subtle animation
+   - Decorative elements (blobs, gradients)
+
+   SECTION 2 - FEATURES:
+   - Heading: "Why Choose Inkwell?"
+   - 3-4 feature cards in grid:
+     a. "Rich Text Editor" - Write with markdown support
+     b. "Beautiful Design" - Clean, distraction-free reading
+     c. "Easy to Use" - Simple, intuitive interface
+     d. "Share & Connect" - Build your audience
+   - Each card has icon, title, description
+
+   SECTION 3 - RECENT POSTS:
+   - Heading: "Latest Stories"
+   - Fetch 6 recent published posts: api.post.list.useQuery
+   - Display in grid using PostCard
+   - "View All Posts" button at bottom
+
+   SECTION 4 - CTA:
+   - Centered section with gradient background
+   - Heading: "Ready to Start Writing?"
+   - Text: "Join our community of writers today"
+   - "Get Started" button (links to /auth/signup)
+
+   SECTION 5 - FOOTER:
+   - Already created Footer component, just import and use
+
+4. Style with Tailwind:
+   - Full-width sections with alternating backgrounds
+   - Generous padding and spacing
+   - Smooth animations (fade-in, slide-up)
+   - Responsive design
+   - Modern gradient backgrounds
+   - Hero section min-height: 80vh
+
+5. Add scroll animations (optional, use intersection observer)
+6. Add proper TypeScript types
+7. Export as default
+```
+
+---
+
+## Part I: Update Navbar with Active States
+
+**Update `components/layout/Navbar.tsx`:**
+
+**Copilot prompt:**
+
+```
+Update the Navbar to show active link states:
+
+1. Import usePathname from next/navigation
+2. Get current pathname
+3. Add active state styling to nav links:
+   - If pathname matches link, add accent color and underline
+   - Example: pathname === '/blogs' ? 'text-primary border-b-2' : ''
+
+4. Update user authentication check to use real Supabase session:
+   - Use useEffect to check session on mount
+   - Update isAuthenticated state
+   - Show correct buttons based on auth state
+
+5. Add user profile dropdown when authenticated:
+   - Avatar with user initials
+   - Dropdown menu with:
+     - "Dashboard" link
+     - "Profile" link (optional)
+     - Divider
+     - "Logout" button
+
+Keep all existing functionality and styling.
+```
+
+---
+
+## Part J: Add Loading States and Error Boundaries
+
+**Create `components/ui/loading-spinner.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create a LoadingSpinner component:
+
+1. Import Loader2 icon from lucide-react
+2. Component props:
+   - size?: 'sm' | 'md' | 'lg' (default: 'md')
+   - className?: string
+
+3. Return animated spinner:
+   - Loader2 icon with spin animation
+   - Size variants: sm=16px, md=24px, lg=32px
+   - Center alignment option
+
+4. Style with Tailwind
+5. Export component
+```
+
+**Create `components/ui/error-message.tsx`:**
+
+**Copilot prompt:**
+
+```
+Create an ErrorMessage component:
+
+1. Import AlertCircle icon from lucide-react
+2. Import Alert components from shadcn
+
+3. Component props:
+   - title?: string (default: "Error")
+   - message: string
+   - retry?: () => void (optional retry button)
+
+4. Display:
+   - Alert with destructive variant
+   - Icon + title + message
+   - Retry button if retry function provided
+
+5. Style with Tailwind
+6. Export component
+```
+
+---
+
+## ✅ CHECKPOINT 6
+
+You should now have:
+- ✅ Category filter component
+- ✅ Post list component
+- ✅ Search bar component
+- ✅ Blog listing page with search & filter
+- ✅ Individual post page with full content
+- ✅ Related posts section
+- ✅ Landing page with hero and features
+- ✅ Updated navbar with auth state
+- ✅ Loading and error components
+
+**Test the public pages:**
+
+1. Visit `/` - should see landing page
+2. Click "Explore Stories" → `/blogs`
+3. Search for posts
+4. Filter by category
+5. Click on a post → `/blogs/[slug]`
+6. Verify markdown rendering
+7. Check related posts
+8. Test back button
+9. Verify responsive design on mobile
+
+---

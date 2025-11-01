@@ -96,6 +96,10 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
+          // Check if we're in a browser environment
+          if (typeof document === 'undefined') {
+            return undefined;
+          }
           // Get cookie value from document.cookie
           const value = `; ${document.cookie}`;
           const parts = value.split(`; ${name}=`);
@@ -104,6 +108,10 @@ export function createClient() {
           }
         },
         set(name: string, value: string, options: any) {
+          // Check if we're in a browser environment
+          if (typeof document === 'undefined') {
+            return;
+          }
           // Set cookie in the browser
           let cookie = `${name}=${value}`;
           
@@ -123,9 +131,15 @@ export function createClient() {
             cookie += '; secure';
           }
           
-          document.cookie = cookie;
+          if (typeof document !== 'undefined') {
+            document.cookie = cookie;
+          }
         },
         remove(name: string, options: any) {
+          // Check if we're in a browser environment
+          if (typeof document === 'undefined') {
+            return;
+          }
           // Remove cookie by setting expiry to past date
           let cookie = `${name}=; max-age=0`;
           

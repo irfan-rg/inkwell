@@ -35,6 +35,11 @@ export const posts = pgTable('posts', {
   // Author reference - links to Supabase auth.users table
   authorId: uuid('author_id').notNull(),
   
+  // Cached author information for performance (avoids joins with auth.users)
+  // These are denormalized from user_metadata and updated on post creation/update
+  authorName: varchar('author_name', { length: 255 }).notNull(),
+  authorEmail: varchar('author_email', { length: 255 }).notNull(),
+  
   // Timestamps for tracking creation and modifications
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
