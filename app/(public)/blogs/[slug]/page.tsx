@@ -7,6 +7,7 @@ import Link from "next/link";
 import { api } from "@/lib/trpc";
 import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
 import { PostCard } from "@/components/blog/PostCard";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
+import { calculateReadingTime } from "@/lib/utils";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -68,9 +70,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  // Calculate reading time (simple estimate: 200 words per minute)
-  const wordCount = post.content.split(/\s+/).length;
-  const readingTime = Math.ceil(wordCount / 200);
+  // Calculate reading time using utility function
+  const readingTime = calculateReadingTime(post.content);
 
   // Get author initials for avatar
   const getAuthorInitials = (name: string | null) => {
@@ -252,15 +253,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               <div>
                 <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
                 {relatedLoading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[...Array(3)].map((_, i) => (
-                      <div key={i} className="space-y-4">
-                        <Skeleton className="h-48 w-full rounded-lg" />
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-4 w-full" />
-                      </div>
-                    ))}
-                  </div>
+                  <PostListSkeleton count={3} variant="compact" />
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredRelatedPosts.slice(0, 3).map((relatedPost) => (

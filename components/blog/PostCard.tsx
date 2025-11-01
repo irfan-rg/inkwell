@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Calendar, Clock, User } from "lucide-react";
 import { format } from "date-fns";
+import { calculateReadingTime } from "@/lib/utils";
 
 interface PostCardProps {
   post: {
@@ -13,6 +14,7 @@ interface PostCardProps {
     title: string;
     slug: string;
     excerpt?: string | null;
+    content?: string;
     coverImage?: string | null;
     published: boolean;
     createdAt: Date | string;
@@ -34,6 +36,9 @@ export function PostCard({ post, variant = "default", showAuthor = false }: Post
 
   // Format date consistently to avoid hydration mismatch
   const formattedDate = format(new Date(post.createdAt), "MMM d, yyyy");
+
+  // Calculate reading time from content
+  const readingTime = post.content ? calculateReadingTime(post.content) : null;
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg group">
@@ -107,11 +112,11 @@ export function PostCard({ post, variant = "default", showAuthor = false }: Post
             <span>{formattedDate}</span>
           </div>
 
-          {/* Reading Time (estimate based on content) */}
-          {post.excerpt && (
+          {/* Reading Time */}
+          {readingTime && (
             <div className="flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
-              <span>5 min read</span>
+              <span>{readingTime} min read</span>
             </div>
           )}
         </CardFooter>

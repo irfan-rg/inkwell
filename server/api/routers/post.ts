@@ -405,10 +405,11 @@ export const postRouter = router({
       }
 
       // If filtering by category, we need to join through postCategories
+      // Fetch one extra to check if there are more posts
       const query = db.query.posts.findMany({
         where: conditions.length > 0 ? and(...conditions) : undefined,
         orderBy: [desc(posts.createdAt)],
-        limit,
+        limit: limit + 1, // Fetch one extra to check for more
         offset,
         with: {
           postCategories: {

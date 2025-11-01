@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail, Lock, AlertCircle, PenSquare, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -45,11 +46,13 @@ export default function LoginPage() {
 
       if (data.user) {
         // Successful login, redirect to dashboard
+        toast.success("Welcome back!");
         router.push("/dashboard");
         router.refresh();
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
   };

@@ -6,11 +6,11 @@
  */
 
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 import { publicProcedure, protectedProcedure, router } from '../trpc';
 import { db } from '@/server/db';
-import { categories } from '@/server/db/schema';
+import { categories, postCategories } from '@/server/db/schema';
 import { generateSlug } from '@/lib/utils';
 
 /**
@@ -215,13 +215,22 @@ export const categoryRouter = router({
    * List all categories
    * 
    * @public
-   * @returns Array of all categories ordered by name
+   * @returns Array of all categories ordered by name with post counts
    */
   list: publicProcedure
     .query(async () => {
       const allCategories = await db
-        .select()
+        .select({
+          id: categories.id,
+          name: categories.name,
+          slug: categories.slug,
+          description: categories.description,
+          createdAt: categories.createdAt,
+          postCount: sql<number>`cast(count(${postCategories.categoryId}) as integer)`,
+        })
         .from(categories)
+        .leftJoin(postCategories, eq(categories.id, postCategories.categoryId))
+        .groupBy(categories.id)
         .orderBy(categories.name);
 
       return allCategories;

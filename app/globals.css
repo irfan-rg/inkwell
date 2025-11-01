@@ -120,3 +120,182 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================
+   Smooth Scrolling
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   Custom Scrollbar (Webkit)
+   ============================================ */
+
+/* ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.704 0.04 256.788 / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.704 0.04 256.788 / 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.551 0.027 264.364 / 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.551 0.027 264.364 / 0.5);
+} */
+
+/* ============================================
+   Focus Visible (Accessibility)
+   ============================================ */
+:focus-visible {
+  outline: 2px solid oklch(0.704 0.04 256.788);
+  outline-offset: 2px;
+}
+
+.dark :focus-visible {
+  outline-color: oklch(0.551 0.027 264.364);
+}
+
+/* ============================================
+   Prose Styling (Markdown Content)
+   ============================================ */
+.prose {
+  @apply max-w-none;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-bold tracking-tight;
+}
+
+.prose h1 {
+  @apply text-3xl md:text-4xl mb-4;
+}
+
+.prose h2 {
+  @apply text-2xl md:text-3xl mt-8 mb-4;
+}
+
+.prose h3 {
+  @apply text-xl md:text-2xl mt-6 mb-3;
+}
+
+.prose p {
+  @apply text-base md:text-lg leading-relaxed mb-4;
+}
+
+.prose a {
+  @apply text-primary hover:underline font-medium transition-colors;
+}
+
+.prose code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-6;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-primary pl-4 italic my-6;
+}
+
+.prose ul,
+.prose ol {
+  @apply my-4 ml-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose img {
+  @apply rounded-lg my-6;
+}
+
+/* ============================================
+   Custom Animations
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    oklch(0.968 0.007 247.896) 0%,
+    oklch(0.929 0.013 255.508) 50%,
+    oklch(0.968 0.007 247.896) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.dark .animate-shimmer {
+  background: linear-gradient(
+    to right,
+    oklch(0.208 0.042 265.755) 0%,
+    oklch(0.279 0.041 260.031) 50%,
+    oklch(0.208 0.042 265.755) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* ============================================
+   Selection Colors
+   ============================================ */
+::selection {
+  background-color: oklch(0.704 0.04 256.788 / 0.3);
+}
+
+.dark ::selection {
+  background-color: oklch(0.551 0.027 264.364 / 0.3);
+}

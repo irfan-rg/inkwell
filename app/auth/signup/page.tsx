@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail, Lock, AlertCircle, CheckCircle, PenSquare, Loader2, User } from "lucide-react";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -86,6 +87,7 @@ export default function SignupPage() {
         // Check if email confirmation is required
         if (data.user.identities && data.user.identities.length === 0) {
           setError("This email is already registered. Please sign in instead.");
+          toast.error("This email is already registered. Please sign in instead.");
           setLoading(false);
           return;
         }
@@ -93,12 +95,14 @@ export default function SignupPage() {
         // Successful signup - user is automatically logged in by Supabase
         setSuccess(true);
         setLoading(false);
+        toast.success("Account created successfully! Welcome to Inkwell!");
         
         // Redirect to dashboard immediately
         router.push("/dashboard");
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
   };

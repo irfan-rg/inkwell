@@ -14,36 +14,37 @@ export default function BlogsPage() {
     null
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
 
-  // Fetch posts with filters
-  const { data: posts, isLoading } = api.post.list.useQuery({
+  // Fetch posts with filters (fetch limit + 1 to check for more)
+  const { data: postsData, isLoading } = api.post.list.useQuery({
     published: true,
     categoryId: selectedCategoryId || undefined,
     search: searchQuery || undefined,
-    limit,
-    offset: (page - 1) * limit,
+    limit: limit + 1,
+    offset: (currentPage - 1) * limit,
   });
 
-  // Calculate if there are more posts
-  const hasMore = posts && posts.length === limit;
+  // Check if there are more posts and slice to show only limit
+  const hasMore = postsData && postsData.length > limit;
+  const posts = postsData ? postsData.slice(0, limit) : [];
 
   // Handle filter changes
   const handleCategoryChange = (categoryId: string | null) => {
     setSelectedCategoryId(categoryId);
-    setPage(1); // Reset to first page
+    setCurrentPage(1); // Reset to first page
   };
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    setPage(1); // Reset to first page
+    setCurrentPage(1); // Reset to first page
   };
 
   const clearAllFilters = () => {
     setSelectedCategoryId(null);
     setSearchQuery("");
-    setPage(1);
+    setCurrentPage(1);
   };
 
   const hasActiveFilters = selectedCategoryId !== null || searchQuery !== "";
@@ -98,7 +99,8 @@ export default function BlogsPage() {
               <span>Loading posts...</span>
             ) : (
               <span>
-                Showing {posts?.length || 0} post{posts?.length !== 1 ? "s" : ""}
+                Showing {posts?.length || 0} post{posts?.length !== 1 ? "s" : ""}{" "}
+                {currentPage > 1 && `(Page ${currentPage})`}
               </span>
             )}
           </div>
@@ -121,33 +123,37 @@ export default function BlogsPage() {
           posts={posts || []}
           loading={isLoading}
           showAuthor={true}
-          emptyMessage="No posts found"
+          emptyMessage={hasActiveFilters ? "No posts found" : "No posts yet"}
           emptyDescription={
             hasActiveFilters
               ? "Try adjusting your filters or search query"
               : "There are no published posts at the moment. Check back soon for new content!"
           }
+          emptyIcon={hasActiveFilters ? "search" : "default"}
         />
 
         {/* Pagination */}
         {posts && posts.length > 0 && (
           <div className="mt-12 flex items-center justify-center gap-4">
-            {page > 1 && (
-              <Button
-                variant="outline"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-              >
-                Previous
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
 
-            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage}
+            </span>
 
-            {hasMore && (
-              <Button variant="outline" onClick={() => setPage((p) => p + 1)}>
-                Next
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={!hasMore}
+            >
+              Next
+            </Button>
           </div>
         )}
       </div>

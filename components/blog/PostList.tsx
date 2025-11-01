@@ -1,8 +1,9 @@
 "use client";
 
 import { PostCard } from "./PostCard";
-import { Skeleton } from "@/components/ui/skeleton";
-import { FileText } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { FileText, Search } from "lucide-react";
 
 interface PostListProps {
   posts: Array<{
@@ -27,6 +28,7 @@ interface PostListProps {
   loading?: boolean;
   emptyMessage?: string;
   emptyDescription?: string;
+  emptyIcon?: "default" | "search";
 }
 
 export function PostList({
@@ -36,37 +38,21 @@ export function PostList({
   loading = false,
   emptyMessage = "No posts found",
   emptyDescription = "There are no published posts at the moment. Check back later!",
+  emptyIcon = "default",
 }: PostListProps) {
   // Loading state
   if (loading) {
-    return (
-      <div className={`grid gap-6 ${
-        variant === "compact"
-          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-      }`}>
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="space-y-4">
-            <Skeleton className="h-48 w-full rounded-lg" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-        ))}
-      </div>
-    );
+    return <PostListSkeleton count={6} variant={variant} />;
   }
 
   // Empty state
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-semibold mb-2">{emptyMessage}</h3>
-        <p className="text-sm text-muted-foreground max-w-sm">
-          {emptyDescription}
-        </p>
-      </div>
+      <EmptyState
+        icon={emptyIcon === "search" ? Search : FileText}
+        title={emptyMessage}
+        description={emptyDescription}
+      />
     );
   }
 

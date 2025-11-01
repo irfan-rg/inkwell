@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/trpc";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -17,15 +19,22 @@ import {
   AlertDialogTrigger 
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { PlusCircle, FileText, FolderOpen, BookOpen, Edit, Trash2, Calendar, Clock, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { formatDistanceToNow, format } from "date-fns";
+import { calculateReadingTime } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [userName, setUserName] = useState<string>("");
   const [deletePostId, setDeletePostId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">("all");
   const supabase = createClient();
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
   // Get user info
   useEffect(() => {
@@ -44,15 +53,97 @@ export default function DashboardPage() {
   const { data: posts, isLoading } = api.post.getUserPosts.useQuery();
   const utils = api.useUtils();
   
-  // Delete mutation
+  // Update mutation for toggling publish status
+  const updateMutation = api.post.update.useMutation({
+    onMutate: async (updatedPost) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: [['post', 'getUserPosts'], { type: 'query' }],
+      });
+      
+      // Snapshot previous value
+      const previousPosts = queryClient.getQueryData([
+        ['post', 'getUserPosts'],
+        { type: 'query' },
+      ]);
+      
+      // Optimistically update the post
+      queryClient.setQueryData(
+        [['post', 'getUserPosts'], { type: 'query' }],
+        (old: any) => {
+          if (!old) return old;
+          return old.map((post: any) =>
+            post.id === updatedPost.id
+              ? { ...post, published: updatedPost.published }
+              : post
+          );
+        }
+      );
+      
+      return { previousPosts };
+    },
+    onError: (err, updatedPost, context) => {
+      // Rollback on error
+      if (context?.previousPosts) {
+        queryClient.setQueryData(
+          [['post', 'getUserPosts'], { type: 'query' }],
+          context.previousPosts
+        );
+      }
+      toast.error(err.message || "Failed to update post");
+    },
+    onSuccess: (data, variables) => {
+      toast.success(
+        variables.published ? "Post published successfully" : "Post unpublished successfully"
+      );
+    },
+    onSettled: () => {
+      utils.post.getUserPosts.invalidate();
+    },
+  });
+  
+  // Delete mutation with optimistic updates
   const deleteMutation = api.post.delete.useMutation({
+    onMutate: async (deletedPost) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: [['post', 'getUserPosts'], { type: 'query' }],
+      });
+      
+      // Snapshot previous value
+      const previousPosts = queryClient.getQueryData([
+        ['post', 'getUserPosts'],
+        { type: 'query' },
+      ]);
+      
+      // Optimistically update - remove the post immediately
+      queryClient.setQueryData(
+        [['post', 'getUserPosts'], { type: 'query' }],
+        (old: any) => {
+          if (!old) return old;
+          return old.filter((post: any) => post.id !== deletedPost.id);
+        }
+      );
+      
+      return { previousPosts };
+    },
+    onError: (err, deletedPost, context) => {
+      // Rollback on error
+      if (context?.previousPosts) {
+        queryClient.setQueryData(
+          [['post', 'getUserPosts'], { type: 'query' }],
+          context.previousPosts
+        );
+      }
+      toast.error(err.message || "Failed to delete post");
+    },
     onSuccess: () => {
       toast.success("Post deleted successfully");
-      utils.post.getUserPosts.invalidate();
       setDeletePostId(null);
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to delete post");
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
+      utils.post.getUserPosts.invalidate();
     },
   });
 
@@ -63,9 +154,25 @@ export default function DashboardPage() {
     draftPosts: posts?.filter((p) => !p.published).length || 0,
   };
 
+  // Filter posts based on active tab
+  const filteredPosts = posts?.filter((post) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "published") return post.published;
+    if (activeTab === "draft") return !post.published;
+    return true;
+  }) || [];
+
   // Handle delete
   const handleDelete = (postId: string) => {
     deleteMutation.mutate({ id: postId });
+  };
+
+  // Handle toggle publish status
+  const handleTogglePublish = (postId: string, currentStatus: boolean) => {
+    updateMutation.mutate({
+      id: postId,
+      published: !currentStatus,
+    });
   };
 
   return (
@@ -147,30 +254,85 @@ export default function DashboardPage() {
       {/* Recent Posts Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Posts</CardTitle>
+          <CardTitle>Your Posts</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="rounded-lg border p-4">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1 space-y-3">
+                      <Skeleton className="h-5 w-3/4" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-20" />
+                      </div>
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-2/3" />
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : !posts || posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No posts yet</h3>
-              <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-                Start creating content by clicking the button below. Your posts will appear here.
-              </p>
-              <Button asChild>
-                <Link href="/dashboard/new">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Create Your First Post
-                </Link>
-              </Button>
-            </div>
+            <EmptyState
+              icon={FileText}
+              title="No posts yet"
+              description="Start creating content by clicking the button below. Your posts will appear here."
+              action={{
+                label: "Create Your First Post",
+                onClick: () => router.push("/dashboard/new"),
+              }}
+            />
           ) : (
-            <div className="space-y-4">
-              {posts.slice(0, 5).map((post) => (
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
+              <TabsList className="mb-4">
+                <TabsTrigger value="all" className="relative">
+                  All Posts
+                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
+                    {stats.totalPosts}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value="published" className="relative">
+                  Published
+                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
+                    {stats.publishedPosts}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value="draft" className="relative">
+                  Drafts
+                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
+                    {stats.draftPosts}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value={activeTab} className="mt-0">
+                {filteredPosts.length === 0 ? (
+                  <EmptyState
+                    icon={FileText}
+                    title={`No ${activeTab === "all" ? "" : activeTab} posts`}
+                    description={
+                      activeTab === "published"
+                        ? "You haven't published any posts yet. Publish a draft to see it here."
+                        : activeTab === "draft"
+                        ? "You don't have any drafts. Create a new post to get started."
+                        : "Start creating content by clicking the button below."
+                    }
+                    action={{
+                      label: "Create New Post",
+                      onClick: () => router.push("/dashboard/new"),
+                    }}
+                  />
+                ) : (
+                  <div className="space-y-4">
+                    {filteredPosts.slice(0, 5).map((post) => (
                 <div
                   key={post.id}
                   className="flex items-start gap-4 rounded-lg border p-4 transition-colors hover:bg-muted/50"
@@ -185,9 +347,14 @@ export default function DashboardPage() {
                             <Calendar className="h-3 w-3" />
                             {format(new Date(post.createdAt), "MMM d, yyyy")}
                           </span>
-                          {post.updatedAt !== post.createdAt && (
+                          {post.content && (
                             <span className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
+                              {calculateReadingTime(post.content)} min read
+                            </span>
+                          )}
+                          {post.updatedAt !== post.createdAt && (
+                            <span className="flex items-center gap-1 text-muted-foreground/70">
                               Updated {formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}
                             </span>
                           )}
@@ -225,6 +392,14 @@ export default function DashboardPage() {
                         </Link>
                       </Button>
                     )}
+                    <Button
+                      variant={post.published ? "ghost" : "default"}
+                      size="sm"
+                      onClick={() => handleTogglePublish(post.id, post.published)}
+                      disabled={updateMutation.isPending}
+                    >
+                      {post.published ? "Unpublish" : "Publish"}
+                    </Button>
                     <Button variant="ghost" size="sm" asChild>
                       <Link href={`/dashboard/edit/${post.id}`}>
                         <Edit className="h-4 w-4" />
@@ -257,21 +432,23 @@ export default function DashboardPage() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    </div>
                   </div>
-                </div>
-              ))}
-              
-              {posts.length > 5 && (
-                <div className="pt-4 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Showing 5 of {posts.length} posts
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                ))}
+                {filteredPosts.length > 5 && (
+                  <div className="pt-4 text-center">
+                    <p className="text-sm text-muted-foreground">
+                      Showing 5 of {filteredPosts.length} posts
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
+    </CardContent>
+  </Card>
+</div>
   );
 }

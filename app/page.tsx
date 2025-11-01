@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/trpc";
 import { PostCard } from "@/components/blog/PostCard";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { PenTool, BookOpen, Users, Sparkles, ArrowRight } from "lucide-react";
 
 export default function Home() {
@@ -145,16 +147,7 @@ export default function Home() {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="space-y-4 animate-pulse">
-                  <div className="h-48 bg-muted rounded-lg" />
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-4 bg-muted rounded w-full" />
-                  <div className="h-4 bg-muted rounded w-2/3" />
-                </div>
-              ))}
-            </div>
+            <PostListSkeleton count={6} />
           ) : recentPosts && recentPosts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -172,10 +165,11 @@ export default function Home() {
               </div>
             </>
           ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <p>No posts yet. Be the first to share your story!</p>
-            </div>
+            <EmptyState
+              icon={BookOpen}
+              title="No posts yet"
+              description="Be the first to share your story! Sign up and start writing today."
+            />
           )}
         </div>
       </section>
