@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import {
@@ -31,6 +31,7 @@ export function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState<string>("");
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
 
   // Check authentication status
@@ -79,6 +80,14 @@ export function Navbar() {
     return userEmail.charAt(0).toUpperCase();
   };
 
+  // Helper function to get active link classes
+  const getLinkClasses = (path: string) => {
+    const isActive = pathname === path || (path !== "/" && pathname?.startsWith(path));
+    return `text-sm font-medium transition-colors hover:text-primary ${
+      isActive ? "text-primary border-b-2 border-primary pb-[2px]" : ""
+    }`;
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -96,7 +105,7 @@ export function Navbar() {
         <div className="hidden md:flex md:items-center md:space-x-6">
           <Link 
             href="/blogs" 
-            className="text-sm font-medium transition-colors hover:text-primary"
+            className={getLinkClasses("/blogs")}
           >
             Blogs
           </Link>
@@ -105,7 +114,7 @@ export function Navbar() {
             <>
               <Link 
                 href="/dashboard" 
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className={getLinkClasses("/dashboard")}
               >
                 Dashboard
               </Link>
@@ -192,7 +201,9 @@ export function Navbar() {
             <div className="flex flex-col space-y-4">
               <Link 
                 href="/blogs" 
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  pathname === "/blogs" || pathname?.startsWith("/blogs") ? "text-primary font-semibold" : ""
+                }`}
                 onClick={closeMobileMenu}
               >
                 Blogs
@@ -202,7 +213,9 @@ export function Navbar() {
                 <>
                   <Link 
                     href="/dashboard" 
-                    className="text-sm font-medium transition-colors hover:text-primary"
+                    className={`text-sm font-medium transition-colors hover:text-primary ${
+                      pathname === "/dashboard" || pathname?.startsWith("/dashboard") ? "text-primary font-semibold" : ""
+                    }`}
                     onClick={closeMobileMenu}
                   >
                     Dashboard

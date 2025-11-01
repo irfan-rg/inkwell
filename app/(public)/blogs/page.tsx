@@ -1,37 +1,156 @@
 "use client";
 
+import { useState } from "react";
 import { api } from "@/lib/trpc";
 import { PostList } from "@/components/blog/PostList";
+import { CategoryFilter } from "@/components/blog/CategoryFilter";
+import { SearchBar } from "@/components/blog/SearchBar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Filter, X } from "lucide-react";
 
 export default function BlogsPage() {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 12;
+
+  // Fetch posts with filters
   const { data: posts, isLoading } = api.post.list.useQuery({
     published: true,
+    categoryId: selectedCategoryId || undefined,
+    search: searchQuery || undefined,
+    limit,
+    offset: (page - 1) * limit,
   });
 
+  // Calculate if there are more posts
+  const hasMore = posts && posts.length === limit;
+
+  // Handle filter changes
+  const handleCategoryChange = (categoryId: string | null) => {
+    setSelectedCategoryId(categoryId);
+    setPage(1); // Reset to first page
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    setPage(1); // Reset to first page
+  };
+
+  const clearAllFilters = () => {
+    setSelectedCategoryId(null);
+    setSearchQuery("");
+    setPage(1);
+  };
+
+  const hasActiveFilters = selectedCategoryId !== null || searchQuery !== "";
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Blog</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Discover articles, tutorials, and insights on various topics
-        </p>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <div className="bg-linear-to-br from-primary/10 via-primary/5 to-background border-b">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto text-center space-y-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              Explore Stories
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Discover insightful articles from our community
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Loading State */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-8">
+          <SearchBar
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search posts by title or content..."
+          />
         </div>
-      ) : (
-        /* Posts Grid */
+
+        {/* Category Filter */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="h-5 w-5 text-muted-foreground" />
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              Filter by Category
+            </h2>
+          </div>
+          <CategoryFilter
+            selectedCategoryId={selectedCategoryId}
+            onCategoryChange={handleCategoryChange}
+          />
+        </div>
+
+        <Separator className="my-8" />
+
+        {/* Results Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-sm text-muted-foreground">
+            {isLoading ? (
+              <span>Loading posts...</span>
+            ) : (
+              <span>
+                Showing {posts?.length || 0} post{posts?.length !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearAllFilters}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Clear all filters
+            </Button>
+          )}
+        </div>
+
+        {/* Posts Grid */}
         <PostList
           posts={posts || []}
+          loading={isLoading}
           showAuthor={true}
-          emptyMessage="No posts yet"
-          emptyDescription="There are no published posts at the moment. Check back soon for new content!"
+          emptyMessage="No posts found"
+          emptyDescription={
+            hasActiveFilters
+              ? "Try adjusting your filters or search query"
+              : "There are no published posts at the moment. Check back soon for new content!"
+          }
         />
-      )}
+
+        {/* Pagination */}
+        {posts && posts.length > 0 && (
+          <div className="mt-12 flex items-center justify-center gap-4">
+            {page > 1 && (
+              <Button
+                variant="outline"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </Button>
+            )}
+
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+
+            {hasMore && (
+              <Button variant="outline" onClick={() => setPage((p) => p + 1)}>
+                Next
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { PostCard } from "./PostCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { FileText } from "lucide-react";
 
 interface PostListProps {
@@ -23,6 +24,7 @@ interface PostListProps {
   }>;
   variant?: "default" | "compact";
   showAuthor?: boolean;
+  loading?: boolean;
   emptyMessage?: string;
   emptyDescription?: string;
 }
@@ -31,9 +33,31 @@ export function PostList({
   posts,
   variant = "default",
   showAuthor = false,
+  loading = false,
   emptyMessage = "No posts found",
   emptyDescription = "There are no published posts at the moment. Check back later!",
 }: PostListProps) {
+  // Loading state
+  if (loading) {
+    return (
+      <div className={`grid gap-6 ${
+        variant === "compact"
+          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      }`}>
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="h-48 w-full rounded-lg" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Empty state
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -46,8 +70,9 @@ export function PostList({
     );
   }
 
+  // Posts grid
   return (
-    <div className={`grid gap-6 ${
+    <div className={`grid gap-6 animate-in fade-in duration-500 ${
       variant === "compact"
         ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"

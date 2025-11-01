@@ -9,9 +9,9 @@
 
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { eq, and, desc, inArray, or } from 'drizzle-orm';
+import { eq, and, desc, or, ilike } from 'drizzle-orm';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
-import { posts, categories, postCategories } from '@/server/db/schema';
+import { posts, postCategories } from '@/server/db/schema';
 import { generateSlug } from '@/lib/utils';
 
 // ============================================
@@ -65,6 +65,7 @@ const listPostsSchema = z.object({
   published: z.boolean().optional(),
   categoryId: z.string().uuid().optional(),
   authorId: z.string().uuid().optional(),
+  search: z.string().optional(),
   limit: z.number().min(1).max(100).default(10),
   offset: z.number().min(0).default(0),
 });
@@ -379,7 +380,7 @@ export const postRouter = router({
     .input(listPostsSchema)
     .query(async ({ ctx, input }) => {
       const { db } = ctx;
-      const { published, categoryId, authorId, limit, offset } = input;
+      const { published, categoryId, authorId, search, limit, offset } = input;
 
       // Build where conditions
       const conditions = [];
@@ -392,8 +393,19 @@ export const postRouter = router({
         conditions.push(eq(posts.authorId, authorId));
       }
 
+      // Add search condition (case-insensitive)
+      if (search) {
+        conditions.push(
+          or(
+            ilike(posts.title, `%${search}%`),
+            ilike(posts.content, `%${search}%`),
+            ilike(posts.excerpt, `%${search}%`)
+          )
+        );
+      }
+
       // If filtering by category, we need to join through postCategories
-      let query = db.query.posts.findMany({
+      const query = db.query.posts.findMany({
         where: conditions.length > 0 ? and(...conditions) : undefined,
         orderBy: [desc(posts.createdAt)],
         limit,

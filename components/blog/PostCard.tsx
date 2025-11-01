@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Calendar, Clock, User } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 
 interface PostCardProps {
   post: {
@@ -29,6 +31,9 @@ interface PostCardProps {
 
 export function PostCard({ post, variant = "default", showAuthor = false }: PostCardProps) {
   const isCompact = variant === "compact";
+
+  // Format date consistently to avoid hydration mismatch
+  const formattedDate = format(new Date(post.createdAt), "MMM d, yyyy");
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg group">
@@ -99,7 +104,7 @@ export function PostCard({ post, variant = "default", showAuthor = false }: Post
           {/* Date */}
           <div className="flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5" />
-            <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
+            <span>{formattedDate}</span>
           </div>
 
           {/* Reading Time (estimate based on content) */}
