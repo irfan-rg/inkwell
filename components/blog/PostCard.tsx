@@ -27,9 +27,10 @@ interface PostCardProps {
     }>;
   };
   variant?: "default" | "compact";
+  showAuthor?: boolean;
 }
 
-export function PostCard({ post, variant = "default" }: PostCardProps) {
+export function PostCard({ post, variant = "default", showAuthor = true }: PostCardProps) {
   const readingTime = post.content ? calculateReadingTime(post.content) : null;
 
   // COMPACT VARIANT (for sidebars/related posts)
@@ -147,7 +148,7 @@ export function PostCard({ post, variant = "default" }: PostCardProps) {
           {/* Metadata footer */}
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             {/* Left side: Author */}
-            {post.authorName && (
+            {showAuthor && post.authorName && (
               <div className="flex items-center gap-1">
                 <User className="h-3.5 w-3.5" />
                 <span>{post.authorName}</span>
