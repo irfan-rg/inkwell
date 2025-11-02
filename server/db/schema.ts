@@ -32,6 +32,9 @@ export const posts = pgTable('posts', {
   // Publication status - false for drafts, true for published posts
   published: boolean('published').notNull().default(false),
   
+  // Archive status - true for archived posts (removed from main lists but not deleted)
+  archived: boolean('archived').notNull().default(false),
+  
   // Author reference - links to Supabase auth.users table
   authorId: uuid('author_id').notNull(),
   

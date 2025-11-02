@@ -198,7 +198,7 @@ export default function CategoriesPage() {
   const slugPreview = formData.name ? generateSlug(formData.name) : "";
 
   return (
-    <div className="space-y-8">
+  <div className="max-w-7xl mx-auto px-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
@@ -293,7 +293,7 @@ export default function CategoriesPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-shadow">
+            <Card key={category.id} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 flex-1">
@@ -301,7 +301,7 @@ export default function CategoriesPage() {
                       <Folder className="h-5 w-5 text-primary" />
                       {category.name}
                     </CardTitle>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mt-4">
                       <Badge variant="secondary" className="text-xs">
                         {category.slug}
                       </Badge>
@@ -332,7 +332,7 @@ export default function CategoriesPage() {
               </CardHeader>
               {category.description && (
                 <CardContent>
-                  <CardDescription className="line-clamp-2">
+                  <CardDescription className="line-clamp-2 -mt-4">
                     {category.description}
                   </CardDescription>
                 </CardContent>

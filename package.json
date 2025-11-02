@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "dotenv -e .env.local -- tsx scripts/seed.ts",
+    "seed-posts": "dotenv -e .env.local -- tsx scripts/seed-posts.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
   },
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/trpc";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -22,16 +22,15 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PlusCircle, FileText, FolderOpen, BookOpen, Edit, Trash2, Calendar, Clock, ExternalLink } from "lucide-react";
+import { PlusCircle, FileText, BookOpen, Edit, Trash2, Calendar, Clock, Archive, FolderOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { formatDistanceToNow, format } from "date-fns";
-import { calculateReadingTime } from "@/lib/utils";
+import { format } from "date-fns";
 
 export default function DashboardPage() {
   const [userName, setUserName] = useState<string>("");
   const [deletePostId, setDeletePostId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft" | "archived">("all");
   const supabase = createClient();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -149,16 +148,18 @@ export default function DashboardPage() {
 
   // Calculate stats from real data
   const stats = {
-    totalPosts: posts?.length || 0,
-    publishedPosts: posts?.filter((p) => p.published).length || 0,
-    draftPosts: posts?.filter((p) => !p.published).length || 0,
+    totalPosts: posts?.filter((p) => !p.archived).length || 0,
+    publishedPosts: posts?.filter((p) => p.published && !p.archived).length || 0,
+    draftPosts: posts?.filter((p) => !p.published && !p.archived).length || 0,
+    archivedPosts: posts?.filter((p) => p.archived).length || 0,
   };
 
   // Filter posts based on active tab
   const filteredPosts = posts?.filter((post) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "published") return post.published;
-    if (activeTab === "draft") return !post.published;
+    if (activeTab === "all") return !post.archived;
+    if (activeTab === "published") return post.published && !post.archived;
+    if (activeTab === "draft") return !post.published && !post.archived;
+    if (activeTab === "archived") return post.archived;
     return true;
   }) || [];
 
@@ -175,280 +176,268 @@ export default function DashboardPage() {
     });
   };
 
+  // Handle toggle archive status
+  const handleToggleArchive = (postId: string, currentArchived: boolean) => {
+    updateMutation.mutate({
+      id: postId,
+      archived: !currentArchived,
+    });
+  };
+
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Welcome back{userName ? `, ${userName}` : ''}! 👋
-        </h1>
-        <p className="text-muted-foreground">
-          Here&apos;s an overview of your blog
-        </p>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* HEADER SECTION */}
+        <div className="border-b border-border py-8">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            {/* Left: Heading */}
+            <h1 className="text-4xl font-display font-bold">Your Stories</h1>
+
+            {/* Right: Action buttons */}
+            <div className="flex gap-3">
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/dashboard/categories">
+                  <FolderOpen className="mr-2 h-5 w-5" />
+                  Categories
+                </Link>
+              </Button>
+              <Button size="lg" asChild>
+                <Link href="/dashboard/new">
+                  <PlusCircle className="mr-2 h-5 w-5" />
+                  New Post
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* STATS SECTION */}
+        <div className="py-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Total posts */}
+          <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
+            <div className="p-3 px-6 py-2">
+              <div className="flex items-start justify-between">
+                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <FileText className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-display font-bold text-primary">{stats.totalPosts}</p>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground mt-4">Total Posts</p>
+            </div>
+          </Card>
+
+          {/* Published */}
+          <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
+            <div className="p-3 px-6 py-2">
+              <div className="flex items-start justify-between">
+                <div className="p-2 rounded-lg bg-green-100 group-hover:bg-green-200 dark:bg-green-950/50 dark:group-hover:bg-green-950/70 transition-colors">
+                  <BookOpen className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-display font-bold text-green-600 dark:text-green-400">{stats.publishedPosts}</p>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground mt-4">Published</p>
+            </div>
+          </Card>
+
+          {/* Drafts */}
+          <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
+            <div className="p-3 px-6 py-2">
+              <div className="flex items-start justify-between">
+                <div className="p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 dark:bg-orange-950/50 dark:group-hover:bg-orange-950/70 transition-colors">
+                  <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-display font-bold text-orange-600 dark:text-orange-400">{stats.draftPosts}</p>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground mt-4">Drafts</p>
+            </div>
+          </Card>
+
+          {/* Archived */}
+          <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
+            <div className="p-3 px-6 py-2">
+              <div className="flex items-start justify-between">
+                <div className="p-2 rounded-lg bg-gray-100 group-hover:bg-gray-200 dark:bg-gray-950/50 dark:group-hover:bg-gray-950/70 transition-colors">
+                  <Archive className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-display font-bold text-gray-600 dark:text-gray-400">{stats.archivedPosts}</p>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground mt-4">Archived</p>
+            </div>
+          </Card>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-4">
-        <Button asChild size="lg">
-          <Link href="/dashboard/new">
-            <PlusCircle className="mr-2 h-5 w-5" />
-            Create New Post
-          </Link>
-        </Button>
-        <Button asChild variant="outline" size="lg">
-          <Link href="/dashboard/categories">
-            <FolderOpen className="mr-2 h-5 w-5" />
-            Manage Categories
-          </Link>
-        </Button>
-        <Button asChild variant="outline" size="lg">
-          <Link href="/blogs">
-            <BookOpen className="mr-2 h-5 w-5" />
-            View Blog
-          </Link>
-        </Button>
-      </div>
+      {/* TABS SECTION */}
+      <div className="pt-8">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="all">
+              All
+              <Badge variant="secondary" className="ml-2">
+                {stats.totalPosts}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="published">
+              Published
+              <Badge variant="secondary" className="ml-2">
+                {stats.publishedPosts}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="draft">
+              Drafts
+              <Badge variant="secondary" className="ml-2">
+                {stats.draftPosts}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="archived">
+              Archived
+              <Badge variant="secondary" className="ml-2">
+                {stats.archivedPosts}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
 
-      {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.publishedPosts}</div>
-            <p className="text-xs text-muted-foreground">
-              Live on your blog
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Drafts</CardTitle>
-            <Edit className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.draftPosts}</div>
-            <p className="text-xs text-muted-foreground">
-              Work in progress
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalPosts}</div>
-            <p className="text-xs text-muted-foreground">
-              All your blog posts
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Posts Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Posts</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="rounded-lg border p-4">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-1 space-y-3">
-                      <Skeleton className="h-5 w-3/4" />
-                      <div className="flex gap-2">
-                        <Skeleton className="h-4 w-24" />
-                        <Skeleton className="h-4 w-20" />
-                      </div>
+          <TabsContent value={activeTab} className="py-6">
+            {/* POSTS LIST */}
+            {isLoading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="p-0 overflow-hidden">
+                    <Skeleton className="aspect-video w-full" />
+                    <div className="p-6 space-y-3">
+                      <Skeleton className="h-6 w-3/4" />
                       <Skeleton className="h-4 w-full" />
                       <Skeleton className="h-4 w-2/3" />
                     </div>
-                    <div className="flex gap-2">
-                      <Skeleton className="h-8 w-8" />
-                      <Skeleton className="h-8 w-8" />
-                      <Skeleton className="h-8 w-8" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : !posts || posts.length === 0 ? (
-            <EmptyState
-              icon={FileText}
-              title="No posts yet"
-              description="Start creating content by clicking the button below. Your posts will appear here."
-              action={{
-                label: "Create Your First Post",
-                onClick: () => router.push("/dashboard/new"),
-              }}
-            />
-          ) : (
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger value="all" className="relative">
-                  All Posts
-                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
-                    {stats.totalPosts}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value="published" className="relative">
-                  Published
-                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
-                    {stats.publishedPosts}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value="draft" className="relative">
-                  Drafts
-                  <Badge variant="secondary" className="ml-2 px-1.5 py-0 text-xs">
-                    {stats.draftPosts}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value={activeTab} className="mt-0">
-                {filteredPosts.length === 0 ? (
-                  <EmptyState
-                    icon={FileText}
-                    title={`No ${activeTab === "all" ? "" : activeTab} posts`}
-                    description={
-                      activeTab === "published"
-                        ? "You haven't published any posts yet. Publish a draft to see it here."
-                        : activeTab === "draft"
-                        ? "You don't have any drafts. Create a new post to get started."
-                        : "Start creating content by clicking the button below."
-                    }
-                    action={{
-                      label: "Create New Post",
-                      onClick: () => router.push("/dashboard/new"),
-                    }}
-                  />
-                ) : (
-                  <div className="space-y-4">
-                    {filteredPosts.slice(0, 5).map((post) => (
-                <div
-                  key={post.id}
-                  className="flex items-start gap-4 rounded-lg border p-4 transition-colors hover:bg-muted/50"
-                >
-                  {/* Post Info */}
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="space-y-1">
-                        <h3 className="font-semibold leading-none">{post.title}</h3>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {format(new Date(post.createdAt), "MMM d, yyyy")}
-                          </span>
-                          {post.content && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {calculateReadingTime(post.content)} min read
-                            </span>
-                          )}
-                          {post.updatedAt !== post.createdAt && (
-                            <span className="flex items-center gap-1 text-muted-foreground/70">
-                              Updated {formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}
-                            </span>
-                          )}
-                        </div>
+                  </Card>
+                ))}
+              </div>
+            ) : filteredPosts.length === 0 ? (
+              <EmptyState
+                icon={FileText}
+                title="No stories yet"
+                description="Start writing your first story"
+                action={{
+                  label: "Create Post",
+                  onClick: () => router.push("/dashboard/new"),
+                }}
+              />
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredPosts.map((post) => (
+                  <Card key={post.id} className="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                    {/* Thumbnail */}
+                    {post.coverImage ? (
+                      <div className="relative aspect-video overflow-hidden">
+                        <img
+                          src={post.coverImage}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:opacity-95 transition-opacity"
+                        />
                       </div>
-                      <Badge variant={post.published ? "default" : "secondary"}>
+                    ) : (
+                      <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-5xl">
+                        𓆰
+                      </div>
+                    )}
+
+                    {/* Content */}
+                    <div className="p-6">
+                      {/* Status badge */}
+                      <Badge variant={post.published ? "default" : "secondary"} className="mb-3">
                         {post.published ? "Published" : "Draft"}
                       </Badge>
-                    </div>
-                    
-                    {post.excerpt && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {post.excerpt}
-                      </p>
-                    )}
 
-                    {/* Categories */}
-                    {post.postCategories && post.postCategories.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {post.postCategories.map((pc: any) => (
-                          <Badge key={pc.categoryId} variant="outline" className="text-xs">
-                            {pc.category.name}
-                          </Badge>
-                        ))}
+                      {/* Title */}
+                      <h3 className="text-xl font-display font-semibold line-clamp-2 mb-2">
+                        {post.title}
+                      </h3>
+
+                      {/* Date */}
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
+                        <Calendar className="h-3.5 w-3.5" />
+                        <span>{format(new Date(post.createdAt), "MMM d, yyyy")}</span>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-2">
-                    {post.published && (
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/blogs/${post.slug}`} target="_blank">
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                    )}
-                    <Button
-                      variant={post.published ? "ghost" : "default"}
-                      size="sm"
-                      onClick={() => handleTogglePublish(post.id, post.published)}
-                      disabled={updateMutation.isPending}
-                    >
-                      {post.published ? "Unpublish" : "Publish"}
-                    </Button>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/dashboard/edit/${post.id}`}>
-                        <Edit className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm" onClick={() => setDeletePostId(post.id)}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                      {/* Action buttons */}
+                      <div className="flex gap-2 flex-wrap">
+                        {/* Edit button */}
+                        <Button size="sm" variant="outline" asChild className="flex-1">
+                          <Link href={`/dashboard/edit/${post.id}`}>
+                            <Edit className="mr-1 h-3.5 w-3.5" />
+                            Edit
+                          </Link>
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will permanently delete &quot;{post.title}&quot;. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel onClick={() => setDeletePostId(null)}>
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(post.id)}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            disabled={deleteMutation.isPending}
+
+                        {/* Archive/Unarchive button */}
+                        {!post.archived ? (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleToggleArchive(post.id, post.archived)}
+                            disabled={updateMutation.isPending}
+                            title="Archive post"
                           >
-                            {deleteMutation.isPending && deletePostId === post.id ? "Deleting..." : "Delete"}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                            <Archive className="h-3.5 w-3.5 text-orange-600" />
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleToggleArchive(post.id, post.archived)}
+                            disabled={updateMutation.isPending}
+                            title="Unarchive post"
+                          >
+                            <Archive className="h-3.5 w-3.5 text-green-600" />
+                          </Button>
+                        )}
+
+                        {/* Delete button */}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="ghost" onClick={() => setDeletePostId(post.id)}>
+                              <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your post.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel onClick={() => setDeletePostId(null)}>
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(post.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
-                  </div>
+                  </Card>
                 ))}
-                {filteredPosts.length > 5 && (
-                  <div className="pt-4 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      Showing 5 of {filteredPosts.length} posts
-                    </p>
-                  </div>
-                )}
               </div>
             )}
           </TabsContent>
         </Tabs>
-      )}
-    </CardContent>
-  </Card>
-</div>
+      </div>
+      </div>
+    </div>
   );
 }

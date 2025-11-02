@@ -1,10 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { api } from "@/lib/trpc";
 import { PostCard } from "@/components/blog/PostCard";
-import { PenTool, BookOpen, Users, Sparkles, ArrowRight } from "lucide-react";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { PenTool, BookOpen, Users, ArrowDown, ArrowRight, PencilLine } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import Footer from "@/components/layout/Footer";
 
 export default function LandingPage() {
   // Fetch recent published posts
@@ -13,157 +18,158 @@ export default function LandingPage() {
     limit: 6,
   });
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setIsAuthenticated(!!user);
+    };
+
+    checkAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  const startWritingHref = isAuthenticated ? "/dashboard" : "/auth/signup";
+
   return (
     <div className="min-h-screen">
-      {/* SECTION 1 - HERO */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-primary/10 via-background to-primary/5">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000" />
-        </div>
+      {/* SECTION 1 - HERO (Above the fold) */}
+      <section className="relative min-h-screen flex items-center justify-center bg-linear-to-br from-paper-cream via-paper-white to-paper-cream">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          {/* Eyebrow text */}
+          <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6 animate-fade-in">
+            Welcome to
+          </p>
 
-        <div className="container mx-auto px-4 py-20 text-center">
-          <div className="max-w-4xl mx-auto space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
-              <span>Welcome to Inkwell</span>
-            </div>
+          {/* Large heading */}
+          <h1 
+            className="text-7xl md:text-8xl font-display font-bold text-ink-black tracking-tight mb-4 animate-slide-up"
+            style={{ textShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+          >
+            Inkwell
+          </h1>
 
-            {/* Heading */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-              Share Your Stories
-              <br />
-              <span className="text-primary">with the World</span>
-            </h1>
+          {/* Tagline */}
+          <p className="text-xl md:text-2xl font-serif italic text-muted-foreground mt-4 mb-6">
+            Where stories find their voice
+          </p>
 
-            {/* Subheading */}
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              A modern platform for writers and readers to connect through the
-              power of words
-            </p>
+          {/* Description */}
+          <p className="text-lg font-body text-ink-blue max-w-2xl mx-auto mt-6 leading-relaxed">
+            A sanctuary for writers and readers who appreciate the craft of storytelling
+          </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button size="lg" asChild className="text-lg px-8">
-                <Link href="/auth/signup">
-                  <PenTool className="mr-2 h-5 w-5" />
-                  Start Writing
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="text-lg px-8">
-                <Link href="/blogs">
-                  <BookOpen className="mr-2 h-5 w-5" />
-                  Explore Stories
-                </Link>
-              </Button>
-            </div>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+            <Button size="lg" asChild className="text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
+              <Link href={startWritingHref}>
+                <PenTool className="mr-2 h-5 w-5" />
+                Start Writing
+              </Link>
+            </Button>
+            <Button size="lg" variant="secondary" asChild className="text-base font-semibold px-8">
+              <Link href="/blogs">
+                <BookOpen className="mr-2 h-5 w-5" />
+                Explore Stories
+              </Link>
+            </Button>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <p className="text-sm text-primary">Scroll to explore</p>
+            <ArrowDown className="h-5 w-5 text-primary" />
           </div>
         </div>
       </section>
 
       {/* SECTION 2 - FEATURES */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Why Choose Inkwell?
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to share your ideas and connect with readers
-            </p>
-          </div>
+      <section className="py-24 bg-paper-white">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section heading */}
+          <h2 className="text-4xl md:text-5xl font-display font-semibold text-center mb-16">
+            Why Inkwell?
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Features grid */}
+          <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="bg-background p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <PenTool className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+              <div className="mb-6">
+                <PencilLine className="h-10 w-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Rich Text Editor</h3>
-              <p className="text-muted-foreground">
-                Write with powerful markdown support and see your content come
-                to life
+              <h3 className="text-xl font-display font-semibold mb-3">
+                Elegant Writing Experience
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Write with markdown support and real-time preview
               </p>
-            </div>
+            </Card>
 
             {/* Feature 2 */}
-            <div className="bg-background p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <BookOpen className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+              <div className="mb-6">
+                <BookOpen className="h-10 w-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Beautiful Design</h3>
-              <p className="text-muted-foreground">
-                Clean, distraction-free reading experience for your audience
+              <h3 className="text-xl font-display font-semibold mb-3">
+                Beautiful Design
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Clean, typography-focused layout that puts content first
               </p>
-            </div>
+            </Card>
 
             {/* Feature 3 */}
-            <div className="bg-background p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Sparkles className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+              <div className="mb-6">
+                <Users className="h-10 w-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Easy to Use</h3>
-              <p className="text-muted-foreground">
-                Simple, intuitive interface that lets you focus on writing
+              <h3 className="text-xl font-display font-semibold mb-3">
+                Share & Connect
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Publish instantly and share your stories with the world
               </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-background p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Share & Connect</h3>
-              <p className="text-muted-foreground">
-                Build your audience and engage with a community of readers
-              </p>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* SECTION 3 - RECENT POSTS */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Latest Stories
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Discover what our community is writing about
-              </p>
-            </div>
-            <Button variant="outline" asChild className="hidden sm:flex">
-              <Link href="/blogs">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+      <section className="py-24 bg-paper-cream">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section heading */}
+          <h2 className="text-4xl md:text-5xl font-display font-semibold text-center mb-12">
+            Latest Stories
+          </h2>
 
+          {/* Posts grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="space-y-4 animate-pulse">
-                  <div className="h-48 bg-muted rounded-lg" />
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-4 bg-muted rounded w-full" />
-                  <div className="h-4 bg-muted rounded w-2/3" />
-                </div>
-              ))}
-            </div>
+            <PostListSkeleton count={6} />
           ) : recentPosts && recentPosts.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {recentPosts.map((post) => (
-                  <PostCard key={post.id} post={post} showAuthor={true} />
+                  <PostCard key={post.id} post={post} />
                 ))}
               </div>
-              <div className="text-center mt-12">
-                <Button size="lg" asChild>
+              
+              {/* View All button */}
+              <div className="flex justify-center mt-12">
+                <Button size="lg" asChild variant="outline">
                   <Link href="/blogs">
                     View All Posts
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -172,34 +178,41 @@ export default function LandingPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <p>No posts yet. Be the first to share your story!</p>
+            <div className="text-center py-12">
+              <BookOpen className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <p className="text-lg text-muted-foreground">
+                Be the first to share your story! Sign up and start writing today.
+              </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* SECTION 4 - CTA */}
-      <section className="py-20 bg-linear-to-br from-primary/10 via-primary/5 to-background">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-              Ready to Start Writing?
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Join our community of writers today and share your unique voice
-              with the world
-            </p>
-            <Button size="lg" asChild className="text-lg px-8">
-              <Link href="/auth/signup">
-                <PenTool className="mr-2 h-5 w-5" />
-                Get Started for Free
-              </Link>
-            </Button>
-          </div>
+      {/* SECTION 4 - CTA SECTION */}
+      <section className="py-24 bg-linear-to-b from-paper-white to-gold-50">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          {/* Heading */}
+          <h2 className="text-4xl md:text-5xl font-display font-semibold mb-6">
+            Ready to share your story?
+          </h2>
+
+          {/* Subtext */}
+          <p className="text-lg text-muted-foreground mb-10">
+            Join our community of writers today
+          </p>
+
+          {/* CTA Button */}
+          <Button size="lg" asChild className="text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
+            <Link href="/auth/signup">
+              <PenTool className="mr-2 h-5 w-5" />
+              Get Started
+            </Link>
+          </Button>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -1,112 +1,80 @@
+"use client";
+
 import Link from "next/link";
-import { Github, Twitter, Linkedin, PenSquare } from "lucide-react";
+import { PenTool } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * Footer Component
  * 
- * Site-wide footer with:
- * - Branding and tagline
- * - Quick navigation links
- * - Social media links
- * - Copyright and tech stack info
+ * Minimal, elegant footer with:
+ * - Logo and tagline
+ * - Simple navigation links
+ * - Copyright
  */
-export function Footer() {
-  const currentYear = new Date().getFullYear();
+export default function Footer() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+    
+    checkAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   return (
-    <footer className="w-full border-t bg-background">
-      <div className="container mx-auto px-4 py-12">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {/* Column 1: Branding */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
-              <PenSquare className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">Inkwell</span>
+    <footer className="w-full border-t border-border bg-background py-8">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          {/* Left: Logo and tagline */}
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+              <PenTool className="h-5 w-5 text-primary -rotate-90" />
+              <span className="font-display text-xl font-bold">Inkwell</span>
             </Link>
-            <p className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground hidden sm:inline">
               Share Your Stories
-            </p>
-            <p className="text-sm text-muted-foreground">
-              A modern blogging platform built for writers and readers who love great content.
-            </p>
+            </span>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Quick Links</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link 
-                  href="/blogs" 
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Blogs
-                </Link>
-              </li>
-              <li>
+          {/* Center: Navigation links */}
+          <nav className="flex items-center gap-6">
+            <Link 
+              href="/blogs" 
+              className="text-sm text-muted-foreground hover:text-gold-600 transition-colors"
+            >
+              Blogs
+            </Link>
+            {isAuthenticated && (
+              <>
+                <span className="text-muted-foreground">•</span>
                 <Link 
                   href="/dashboard" 
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-gold-600 transition-colors"
                 >
                   Dashboard
                 </Link>
-              </li>
-              <li>
-                <Link 
-                  href="#" 
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  About
-                </Link>
-              </li>
-            </ul>
-          </div>
+              </>
+            )}
+          </nav>
 
-          {/* Column 3: Social Links */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Connect</h3>
-            <div className="flex space-x-4">
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-primary"
-                aria-label="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-primary"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-primary"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </Link>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Follow us for updates and new features.
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="mt-12 border-t pt-8">
-          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-            <p className="text-center text-sm text-muted-foreground">
-              © {currentYear} Inkwell. Crafted with ❤️
-            </p>
-            <p className="text-center text-sm text-muted-foreground">
-              Built with Next.js, Supabase, and tRPC
-            </p>
-          </div>
+          {/* Right: Copyright */}
+          <p className="text-sm text-muted-foreground">
+            © 2025 Inkwell
+          </p>
         </div>
       </div>
     </footer>
   );
 }
+

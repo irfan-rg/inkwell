@@ -92,21 +92,42 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       </p>
     ),
 
-    // Custom link styles
-    a: ({ href, children }) => (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-      >
-        {children}
-      </a>
+    // Custom link styles with external link indicator
+    a: ({ href, children }) => {
+      const isExternal = href?.startsWith('http');
+      return (
+        <a
+          href={href}
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noopener noreferrer" : undefined}
+          className="text-gold-600 underline decoration-gold-600/30 transition-colors hover:decoration-gold-600"
+        >
+          {children}
+          {isExternal && <span className="ml-1 text-xs">↗</span>}
+        </a>
+      );
+    },
+
+    // Custom image styles with lazy loading and shadows
+    img: ({ src, alt }) => (
+      <figure className="my-8">
+        <img
+          src={src}
+          alt={alt || ""}
+          loading="lazy"
+          className="rounded-lg shadow-md w-full"
+        />
+        {alt && (
+          <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+            {alt}
+          </figcaption>
+        )}
+      </figure>
     ),
 
     // Custom blockquote styles
     blockquote: ({ children }) => (
-      <blockquote className="my-4 border-l-4 border-primary pl-4 italic text-muted-foreground">
+      <blockquote className="my-4 border-l-4 border-gold-500 pl-4 italic text-muted-foreground">
         {children}
       </blockquote>
     ),
@@ -123,9 +144,9 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       </ol>
     ),
 
-    // Custom table styles
+    // Custom table styles - responsive wrapper
     table: ({ children }) => (
-      <div className="my-6 w-full overflow-y-auto">
+      <div className="my-6 w-full overflow-x-auto">
         <table className="w-full border-collapse border border-border">
           {children}
         </table>
@@ -142,7 +163,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       </th>
     ),
     td: ({ children }) => (
-      <td className="border border-border px-4 py-2">
+      <td className="border border-border px-4 py-2 hover:bg-muted/50 transition-colors">
         {children}
       </td>
     ),
@@ -150,16 +171,6 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
     // Custom horizontal rule
     hr: () => (
       <hr className="my-8 border-border" />
-    ),
-
-    // Custom image styles
-    img: ({ src, alt }) => (
-      <img
-        src={src}
-        alt={alt || ""}
-        className="my-6 rounded-lg border border-border"
-        loading="lazy"
-      />
     ),
   };
 

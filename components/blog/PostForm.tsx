@@ -313,20 +313,8 @@ export function PostForm({ postId, initialData }: PostFormProps) {
       </Card>
 
       {/* Action Bar (Sticky Bottom) */}
-      <div className="sticky bottom-0 z-10 border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className="container mx-auto flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="published"
-              checked={published}
-              onCheckedChange={(checked) => setPublished(checked as boolean)}
-              disabled={isLoading}
-            />
-            <Label htmlFor="published" className="cursor-pointer text-sm">
-              Published
-            </Label>
-          </div>
-
+      <div className="sticky bottom-0 z-50 border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <div className="container mx-auto px-5 py-4 flex justify-end">
           <div className="flex gap-2">
             <Button
               variant="outline"

@@ -1,18 +1,37 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter, Crimson_Pro, Libre_Baskerville } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Editorial fonts for Ink & Paper design
+const libreBaskerville = Libre_Baskerville({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-hero',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+const crimson = Crimson_Pro({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-serif',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -26,10 +45,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html 
+      lang="en" 
+      suppressHydrationWarning
+      className={`${inter.variable} ${libreBaskerville.variable} ${playfair.variable} ${crimson.variable}`}
+    >
+      <body className="font-body antialiased">
         <TRPCProvider>
           <ThemeProvider
             attribute="class"

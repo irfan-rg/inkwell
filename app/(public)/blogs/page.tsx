@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { api } from "@/lib/trpc";
-import { PostList } from "@/components/blog/PostList";
+import { PostCard } from "@/components/blog/PostCard";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { SearchBar } from "@/components/blog/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Filter, X } from "lucide-react";
+import { FileText, X } from "lucide-react";
 
 export default function BlogsPage() {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
-  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
@@ -33,12 +32,12 @@ export default function BlogsPage() {
   // Handle filter changes
   const handleCategoryChange = (categoryId: string | null) => {
     setSelectedCategoryId(categoryId);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1);
   };
 
   const clearAllFilters = () => {
@@ -51,90 +50,89 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="bg-linear-to-br from-primary/10 via-primary/5 to-background border-b">
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-3xl mx-auto text-center space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Explore Stories
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground">
-              Discover insightful articles from our community
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* HERO SECTION */}
+      <section className="bg-linear-to-b from-paper-cream to-paper-white py-16 md:py-24 text-center">
+        <div className="max-w-4xl mx-auto px-6">
+          {/* Heading */}
+          <h1 className="text-5xl md:text-6xl font-display font-bold mb-4">
+            Stories & Insights
+          </h1>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
+          {/* Subheading */}
+          <p className="text-xl text-muted-foreground">
+            Explore our collection of stories
+          </p>
+        </div>
+      </section>
+
+      {/* SEARCH & FILTER SECTION */}
+      <section className="max-w-7xl mx-auto px-6 -mt-8">
+        <div className="bg-paper-white rounded-xl shadow-lg border p-6">
+          {/* SearchBar */}
           <SearchBar
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="Search posts by title or content..."
           />
-        </div>
 
-        {/* Category Filter */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-              Filter by Category
-            </h2>
-          </div>
-          <CategoryFilter
-            selectedCategoryId={selectedCategoryId}
-            onCategoryChange={handleCategoryChange}
-          />
-        </div>
-
-        <Separator className="my-8" />
-
-        {/* Results Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-muted-foreground">
-            {isLoading ? (
-              <span>Loading posts...</span>
-            ) : (
-              <span>
-                Showing {posts?.length || 0} post{posts?.length !== 1 ? "s" : ""}{" "}
-                {currentPage > 1 && `(Page ${currentPage})`}
-              </span>
-            )}
+          {/* CategoryFilter below search */}
+          <div className="mt-4">
+            <CategoryFilter
+              selectedCategoryId={selectedCategoryId}
+              onCategoryChange={handleCategoryChange}
+            />
           </div>
 
+          {/* Clear filters button */}
           {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearAllFilters}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <X className="mr-2 h-4 w-4" />
-              Clear all filters
-            </Button>
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearAllFilters}
+                className="text-muted-foreground"
+              >
+                <X className="mr-2 h-4 w-4" />
+                Clear filters
+              </Button>
+            </div>
           )}
         </div>
+      </section>
 
-        {/* Posts Grid */}
-        <PostList
-          posts={posts || []}
-          loading={isLoading}
-          showAuthor={true}
-          emptyMessage={hasActiveFilters ? "No posts found" : "No posts yet"}
-          emptyDescription={
-            hasActiveFilters
-              ? "Try adjusting your filters or search query"
-              : "There are no published posts at the moment. Check back soon for new content!"
-          }
-          emptyIcon={hasActiveFilters ? "search" : "default"}
-        />
+      {/* POSTS SECTION */}
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        {/* Results header */}
+        <div className="flex justify-between items-center mb-8">
+          <p className="text-sm text-muted-foreground">
+            {isLoading ? (
+              "Loading posts..."
+            ) : (
+              `Showing ${posts.length} post${posts.length !== 1 ? "s" : ""}`
+            )}
+          </p>
+        </div>
+
+        {/* Posts grid */}
+        {isLoading ? (
+          <PostListSkeleton count={6} />
+        ) : posts.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={FileText}
+            title="No posts found"
+            description="Try adjusting your filters"
+          />
+        )}
 
         {/* Pagination */}
-        {posts && posts.length > 0 && (
-          <div className="mt-12 flex items-center justify-center gap-4">
+        {posts.length > 0 && (
+          <div className="mt-12 flex justify-center gap-2">
             <Button
               variant="outline"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -143,7 +141,7 @@ export default function BlogsPage() {
               Previous
             </Button>
 
-            <span className="text-sm text-muted-foreground">
+            <span className="flex items-center px-4 text-sm text-muted-foreground">
               Page {currentPage}
             </span>
 
@@ -156,7 +154,7 @@ export default function BlogsPage() {
             </Button>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

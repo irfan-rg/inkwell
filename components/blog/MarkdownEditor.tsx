@@ -42,24 +42,37 @@ export function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorP
     <div className="flex flex-col space-y-2">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="write" className="flex items-center gap-2">
+          <TabsTrigger
+            value="write"
+            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary  dark:data-[state=active]:text-white"
+          >
             <Edit className="h-4 w-4" />
             Write
           </TabsTrigger>
-          <TabsTrigger value="preview" className="flex items-center gap-2">
+          <TabsTrigger
+            value="preview"
+            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary dark:data-[state=active]:text-white"
+          >
             <Eye className="h-4 w-4" />
             Preview
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="write" className="mt-4">
-          <Textarea
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder || "Write your post content in Markdown..."}
-            className="min-h-[500px] resize-none font-mono text-sm"
-            spellCheck={false}
-          />
+          <div className="relative rounded-md border border-input bg-background p-4">
+            {!value.trim() && (
+              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
+                <p>Start writing your post content in Markdown...</p>
+              </div>
+            )}
+            <Textarea
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder=""
+              className="min-h-[500px] resize-none font-mono text-sm border-none bg-transparent relative"
+              spellCheck={false}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="preview" className="mt-4">

@@ -9,7 +9,6 @@ import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
 import { PostCard } from "@/components/blog/PostCard";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -104,9 +103,10 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className="min-h-screen">
-      {/* Cover Image Hero Section (if exists) */}
-      {post.coverImage && (
-        <div className="relative w-full h-[400px] md:h-[500px] bg-linear-to-br from-primary/10 to-background">
+      {/* HERO SECTION - with cover image */}
+      {post.coverImage ? (
+        <div className="relative w-full aspect-21/9 overflow-hidden">
+          {/* Cover image */}
           <Image
             src={post.coverImage}
             alt={post.title}
@@ -115,162 +115,128 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
+          
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+          
+          {/* Title overlaid at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <div className="max-w-4xl">
+              <h1 className="text-4xl md:text-6xl font-display font-bold text-white">
+                {post.title}
+              </h1>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* HERO SECTION - without cover image */
+        <div className="bg-linear-to-b from-gold-50 to-paper-cream py-16 md:py-24 text-center">
+          <div className="max-w-4xl mx-auto px-6">
+            <h1 className="text-4xl md:text-6xl font-display font-bold">
+              {post.title}
+            </h1>
+          </div>
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Back Button */}
-          <Button variant="ghost" size="sm" asChild className="mb-6 -ml-3">
-            <Link href="/blogs">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Blogs
-            </Link>
-          </Button>
+      {/* BACK BUTTON */}
+      <div className="max-w-4xl mx-auto px-6 pt-8">
+        <Button variant="ghost" size="sm" asChild>
+          <Link href="/blogs">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to stories
+          </Link>
+        </Button>
+      </div>
 
-          {/* Categories */}
-          {post.postCategories && post.postCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {post.postCategories.map((pc: { categoryId: string; category: { name: string } }) => (
-                <Badge key={pc.categoryId} variant="secondary">
-                  {pc.category.name}
-                </Badge>
-              ))}
+      {/* METADATA SECTION */}
+      <div className="max-w-4xl mx-auto px-6 py-8 border-b border-border">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Left side: Author info */}
+          <div className="flex items-center gap-3">
+            <Avatar className="h-12 w-12">
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {getAuthorInitials(post.authorName)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-medium">{post.authorName || "Anonymous"}</p>
+              <p className="text-sm text-muted-foreground">
+                {format(new Date(post.createdAt), "MMM d, yyyy")}
+              </p>
             </div>
-          )}
+          </div>
 
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
-            {post.title}
-          </h1>
-
-          {/* Excerpt */}
-          {post.excerpt && (
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Author & Metadata */}
-          <div className="flex flex-wrap items-center gap-6 mb-8 pb-8 border-b">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-12 w-12">
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  {getAuthorInitials(post.authorName)}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium">{post.authorName || "Anonymous"}</p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>{format(new Date(post.createdAt), "MMM d, yyyy")}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
-                    <span>{readingTime} min read</span>
-                  </div>
-                </div>
+          {/* Right side: Reading time, categories, and share button */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>{readingTime} min read</span>
+            </div>
+            
+            {post.postCategories && post.postCategories.length > 0 && (
+              <div className="flex gap-2">
+                {post.postCategories.slice(0, 2).map((pc: { categoryId: string; category: { name: string } }) => (
+                  <Badge key={pc.categoryId} variant="outline">
+                    {pc.category.name}
+                  </Badge>
+                ))}
               </div>
-            </div>
+            )}
 
-            {/* Share Button */}
+            {/* Share button */}
             <Button
               variant="outline"
               size="sm"
               onClick={handleShare}
-              className="ml-auto"
+              className="gap-2"
             >
-              <Share2 className="mr-2 h-4 w-4" />
+              <Share2 className="h-4 w-4" />
               Share
             </Button>
           </div>
-
-          {/* Cover Image (if not shown in hero) */}
-          {!post.coverImage && post.coverImage && (
-            <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden mb-8">
-              <Image
-                src={post.coverImage}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 896px"
-              />
-            </div>
-          )}
-
-          {/* Content with optimal reading width */}
-          <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-pre:bg-muted">
-            <MarkdownRenderer content={post.content} />
-          </div>
-
-          {/* Footer Section */}
-          <Separator className="my-12" />
-          
-          <div className="space-y-8">
-            {/* Last Updated */}
-            {post.updatedAt !== post.createdAt && (
-              <div className="text-sm text-muted-foreground">
-                Last updated: {format(new Date(post.updatedAt), "MMMM d, yyyy")}
-              </div>
-            )}
-
-            {/* Categories Section */}
-            {post.postCategories && post.postCategories.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold mb-3">Topics</h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.postCategories.map((pc: { categoryId: string; category: { name: string } }) => (
-                    <Badge key={pc.categoryId} variant="outline">
-                      {pc.category.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between pt-6 border-t">
-              <Button variant="outline" asChild>
-                <Link href="/blogs">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  View all posts
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleShare}>
-                <Share2 className="mr-2 h-4 w-4" />
-                Share article
-              </Button>
-            </div>
-          </div>
-
-          {/* Related Posts Section */}
-          {firstCategoryId && filteredRelatedPosts.length > 0 && (
-            <>
-              <Separator className="my-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
-                {relatedLoading ? (
-                  <PostListSkeleton count={3} variant="compact" />
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredRelatedPosts.slice(0, 3).map((relatedPost) => (
-                      <PostCard
-                        key={relatedPost.id}
-                        post={relatedPost}
-                        variant="compact"
-                        showAuthor={false}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
         </div>
       </div>
+
+      {/* ARTICLE CONTENT */}
+      <div className="max-w-3xl mx-auto px-6 py-12">
+        {/* Apply prose classes for beautiful typography */}
+        <div className="prose prose-lg dark:prose-invert max-w-none
+          prose-headings:font-display prose-headings:tracking-tight
+          prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6
+          prose-a:text-gold-600 prose-a:no-underline hover:prose-a:underline
+          prose-blockquote:border-l-4 prose-blockquote:border-gold-500 prose-blockquote:italic
+          prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+          prose-pre:bg-muted prose-pre:border prose-pre:border-border
+          prose-img:rounded-lg prose-img:shadow-md prose-img:w-full">
+          <MarkdownRenderer content={post.content} />
+        </div>
+      </div>
+
+      {/* RELATED POSTS SECTION */}
+      {firstCategoryId && filteredRelatedPosts.length > 0 && (
+        <div className="bg-paper-cream border-t border-border py-16">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-3xl font-display font-semibold mb-8">
+              Related Stories
+            </h2>
+            
+            {relatedLoading ? (
+              <PostListSkeleton count={3} />
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6">
+                {filteredRelatedPosts.slice(0, 3).map((relatedPost) => (
+                  <PostCard
+                    key={relatedPost.id}
+                    post={relatedPost}
+                    variant="default"
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </article>
   );
 }

@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Calendar, Clock, User } from "lucide-react";
-import { format } from "date-fns";
-import { calculateReadingTime } from "@/lib/utils";
+import { formatDate, calculateReadingTime } from "@/lib/utils";
 
 interface PostCardProps {
   post: {
@@ -28,98 +27,148 @@ interface PostCardProps {
     }>;
   };
   variant?: "default" | "compact";
-  showAuthor?: boolean;
 }
 
-export function PostCard({ post, variant = "default", showAuthor = false }: PostCardProps) {
-  const isCompact = variant === "compact";
-
-  // Format date consistently to avoid hydration mismatch
-  const formattedDate = format(new Date(post.createdAt), "MMM d, yyyy");
-
-  // Calculate reading time from content
+export function PostCard({ post, variant = "default" }: PostCardProps) {
   const readingTime = post.content ? calculateReadingTime(post.content) : null;
 
+  // COMPACT VARIANT (for sidebars/related posts)
+  if (variant === "compact") {
+    return (
+      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+        <Link href={`/blogs/${post.slug}`} className="flex gap-4 p-4">
+          {/* Smaller image */}
+          {post.coverImage ? (
+            <div className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover hover:opacity-95 transition-opacity rounded-lg"
+                sizes="96px"
+              />
+            </div>
+          ) : (
+            <div className="w-24 h-24 shrink-0 rounded-lg bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-3xl">
+              𓆰
+            </div>
+          )}
+
+          <div className="flex-1 min-w-0">
+            {/* Categories */}
+            {post.postCategories && post.postCategories.length > 0 && (
+              <div className="flex gap-2 mb-2">
+                <Badge variant="outline" className="text-xs">
+                  {post.postCategories[0].category.name}
+                </Badge>
+                {post.postCategories.length > 1 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{post.postCategories.length - 1}
+                  </Badge>
+                )}
+              </div>
+            )}
+
+            {/* Title */}
+            <h3 className="text-lg font-display font-semibold text-ink-black hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-2">
+              {post.title}
+            </h3>
+
+            {/* Simpler metadata */}
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>{formatDate(new Date(post.createdAt))}</span>
+              </div>
+              {readingTime && (
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <span>{readingTime} min</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </Link>
+      </Card>
+    );
+  }
+
+  // DEFAULT VARIANT LAYOUT
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg group">
-      <Link href={`/blogs/${post.slug}`} className="block">
-        {/* Cover Image */}
-        {post.coverImage && (
-          <div className={`relative overflow-hidden bg-muted ${isCompact ? "h-40" : "h-48 md:h-56"}`}>
+    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group p-0">
+      <Link href={`/blogs/${post.slug}`}>
+        {/* Cover image section */}
+        {post.coverImage ? (
+          <div className="relative aspect-video overflow-hidden">
             <Image
               src={post.coverImage}
               alt={post.title}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes={isCompact ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+              className="object-cover group-hover:opacity-95 transition-opacity"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            {!post.published && (
-              <div className="absolute top-3 right-3">
-                <Badge variant="secondary">Draft</Badge>
-              </div>
-            )}
+          </div>
+        ) : (
+          <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-6xl">
+            𓆰
           </div>
         )}
 
-        <CardHeader className={isCompact ? "pb-3" : "pb-4"}>
-          {/* Categories */}
+        {/* Content section */}
+        <div className="p-6">
+          {/* Categories at top */}
           {post.postCategories && post.postCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {post.postCategories.slice(0, 3).map((pc) => (
+            <div className="flex gap-2 mb-3 flex-wrap">
+              {post.postCategories.slice(0, 2).map((pc) => (
                 <Badge key={pc.category.id} variant="outline" className="text-xs">
                   {pc.category.name}
                 </Badge>
               ))}
-              {post.postCategories.length > 3 && (
+              {post.postCategories.length > 2 && (
                 <Badge variant="outline" className="text-xs">
-                  +{post.postCategories.length - 3}
+                  +{post.postCategories.length - 2} more
                 </Badge>
               )}
             </div>
           )}
 
           {/* Title */}
-          <h3 className={`font-bold leading-tight group-hover:text-primary transition-colors ${
-            isCompact ? "text-lg line-clamp-2" : "text-xl md:text-2xl line-clamp-2"
-          }`}>
+          <h3 className="text-2xl font-display font-semibold text-ink-black group-hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-3">
             {post.title}
           </h3>
-        </CardHeader>
 
-        <CardContent className={isCompact ? "pb-3" : "pb-4"}>
           {/* Excerpt */}
           {post.excerpt && (
-            <p className={`text-muted-foreground ${
-              isCompact ? "text-sm line-clamp-2" : "text-sm md:text-base line-clamp-3"
-            }`}>
+            <p className="text-sm font-body text-muted-foreground leading-relaxed line-clamp-3 mb-4">
               {post.excerpt}
             </p>
           )}
-        </CardContent>
 
-        <CardFooter className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-0">
-          {/* Author */}
-          {showAuthor && post.authorName && (
-            <div className="flex items-center gap-1">
-              <User className="h-3.5 w-3.5" />
-              <span>{post.authorName}</span>
+          {/* Metadata footer */}
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            {/* Left side: Author */}
+            {post.authorName && (
+              <div className="flex items-center gap-1">
+                <User className="h-3.5 w-3.5" />
+                <span>{post.authorName}</span>
+              </div>
+            )}
+
+            {/* Right side: Date + Reading time */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>{formatDate(new Date(post.createdAt))}</span>
+              </div>
+              {readingTime && (
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>{readingTime} min</span>
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Date */}
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{formattedDate}</span>
           </div>
-
-          {/* Reading Time */}
-          {readingTime && (
-            <div className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{readingTime} min read</span>
-            </div>
-          )}
-        </CardFooter>
+        </div>
       </Link>
     </Card>
   );

@@ -24,7 +24,7 @@ import { generateSlug } from '@/lib/utils';
 const createPostSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
   content: z.string().min(1, 'Content is required'),
-  coverImage: z.string().url('Invalid image URL').optional().nullable(),
+  coverImage: z.string().optional().nullable(),
   excerpt: z.string().max(500, 'Excerpt is too long').optional().nullable(),
   published: z.boolean().default(false),
   categoryIds: z.array(z.string().uuid('Invalid category ID')).optional(),
@@ -38,9 +38,10 @@ const updatePostSchema = z.object({
   title: z.string().min(1).max(255).optional(),
   content: z.string().min(1).optional(),
   slug: z.string().min(1).max(255).optional(),
-  coverImage: z.string().url('Invalid image URL').optional().nullable(),
+  coverImage: z.string().optional().nullable(),
   excerpt: z.string().max(500).optional().nullable(),
   published: z.boolean().optional(),
+  archived: z.boolean().optional(),
   categoryIds: z.array(z.string().uuid()).optional(),
 });
 
@@ -393,6 +394,9 @@ export const postRouter = router({
         conditions.push(eq(posts.authorId, authorId));
       }
 
+      // Always exclude archived posts from public listing
+      conditions.push(eq(posts.archived, false));
+
       // Add search condition (case-insensitive)
       if (search) {
         conditions.push(
@@ -429,7 +433,8 @@ export const postRouter = router({
         );
       }
 
-      return allPosts;
+      // Return only the requested limit (slice off the extra one used for pagination check)
+      return allPosts.slice(0, limit);
     }),
 
   /**

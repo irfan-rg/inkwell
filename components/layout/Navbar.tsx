@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { PenSquare, Menu, X, LogOut, User, LayoutDashboard } from "lucide-react";
+import { PenTool, Menu, X, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 /**
@@ -30,6 +30,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState<string>("");
+  const [userName, setUserName] = React.useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -42,6 +43,9 @@ export function Navbar() {
       if (user?.email) {
         setUserEmail(user.email);
       }
+      if (user?.user_metadata?.name) {
+        setUserName(user.user_metadata.name);
+      }
     };
 
     checkAuth();
@@ -53,6 +57,11 @@ export function Navbar() {
         setUserEmail(session.user.email);
       } else {
         setUserEmail("");
+      }
+      if (session?.user?.user_metadata?.name) {
+        setUserName(session.user.user_metadata.name);
+      } else {
+        setUserName("");
       }
     });
 
@@ -83,26 +92,28 @@ export function Navbar() {
   // Helper function to get active link classes
   const getLinkClasses = (path: string) => {
     const isActive = pathname === path || (path !== "/" && pathname?.startsWith(path));
-    return `text-sm font-medium transition-colors hover:text-primary ${
-      isActive ? "text-primary border-b-2 border-primary pb-[2px]" : ""
+    return `text-sm font-medium transition-colors duration-200 hover:text-gold-600 ${
+      isActive ? "text-foreground font-semibold" : "text-muted-foreground"
     }`;
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md shadow-sm">
+      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
         {/* Logo */}
         <Link 
           href="/" 
-          className="flex items-center space-x-2 transition-opacity hover:opacity-80"
+          className="flex items-center gap-2 transition-opacity hover:opacity-80"
           onClick={closeMobileMenu}
         >
-          <PenSquare className="h-6 w-6 text-primary" />
-          <span className="text-xl font-bold">Inkwell</span>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <PenTool className="h-5 w-5 text-primary -rotate-90" />
+          </div>
+          <span className="font-display text-xl font-bold">Inkwell</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex md:items-center md:space-x-6">
+        {/* Desktop Navigation - Left side */}
+        <div className="hidden md:flex md:items-center md:gap-8 md:flex-1 md:ml-12">
           <Link 
             href="/blogs" 
             className={getLinkClasses("/blogs")}
@@ -110,148 +121,125 @@ export function Navbar() {
             Blogs
           </Link>
 
-          {isAuthenticated ? (
-            <>
-              <Link 
-                href="/dashboard" 
-                className={getLinkClasses("/dashboard")}
-              >
-                Dashboard
-              </Link>
+          {isAuthenticated && (
+            <Link 
+              href="/dashboard" 
+              className={getLinkClasses("/dashboard")}
+            >
+              Dashboard
+            </Link>
+          )}
+        </div>
 
-              {/* User Profile Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {getUserInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="text-sm font-medium">{userEmail}</p>
-                    </div>
+        {/* Right Side - Auth & Theme */}
+        <div className="flex items-center gap-3">
+          <div className="hidden md:block">
+            <ThemeToggle />
+          </div>
+
+          {isAuthenticated ? (
+            /* User Profile Dropdown */
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    {userName && (
+                      <p className="text-sm font-semibold">{userName}</p>
+                    )}
+                    <p className={`${userName ? 'text-xs text-muted-foreground' : 'text-sm font-medium'}`}>{userEmail}</p>
                   </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="flex items-center cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="flex items-center cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={handleLogout}
-                    className="cursor-pointer text-red-600 focus:text-red-600"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard" className="cursor-pointer">
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <Button asChild variant="default" size="sm">
+            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex">
               <Link href="/auth/login">Login</Link>
             </Button>
           )}
 
-          <ThemeToggle />
-        </div>
-
-        {/* Mobile Menu Button & Theme Toggle */}
-        <div className="flex items-center space-x-2 md:hidden">
-          <ThemeToggle />
+          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
+            className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
-            onClick={closeMobileMenu}
-          />
-          
-          {/* Drawer */}
-          <div className="fixed right-0 top-16 z-50 h-[calc(100vh-4rem)] w-64 border-l bg-background p-6 shadow-lg md:hidden animate-in slide-in-from-right">
-            <div className="flex flex-col space-y-4">
-              <Link 
-                href="/blogs" 
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === "/blogs" || pathname?.startsWith("/blogs") ? "text-primary font-semibold" : ""
-                }`}
-                onClick={closeMobileMenu}
-              >
-                Blogs
-              </Link>
+        <div className="md:hidden border-t border-border bg-background">
+          <div className="flex flex-col space-y-4 px-6 py-4">
+            <Link 
+              href="/blogs" 
+              className={getLinkClasses("/blogs")}
+              onClick={closeMobileMenu}
+            >
+              Blogs
+            </Link>
 
-              {isAuthenticated ? (
-                <>
-                  <Link 
-                    href="/dashboard" 
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      pathname === "/dashboard" || pathname?.startsWith("/dashboard") ? "text-primary font-semibold" : ""
-                    }`}
-                    onClick={closeMobileMenu}
-                  >
-                    Dashboard
-                  </Link>
-
-                  <div className="pt-4 border-t">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                          {getUserInitials()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-sm font-medium truncate">{userEmail}</p>
-                    </div>
-                    
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-red-600 hover:text-red-600"
-                      onClick={handleLogout}
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <Button asChild variant="default" className="w-full">
-                  <Link href="/auth/login" onClick={closeMobileMenu}>
-                    Login
-                  </Link>
+            {isAuthenticated ? (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className={getLinkClasses("/dashboard")}
+                  onClick={closeMobileMenu}
+                >
+                  Dashboard
+                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="w-full justify-start text-destructive"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
                 </Button>
-              )}
+              </>
+            ) : (
+              <Link href="/auth/login" onClick={closeMobileMenu}>
+                <Button variant="default" size="sm" className="w-full">
+                  Login
+                </Button>
+              </Link>
+            )}
+
+            <div className="pt-2 border-t">
+              <ThemeToggle />
             </div>
           </div>
-        </>
+        </div>
       )}
     </nav>
   );
 }
+
+export default Navbar;
