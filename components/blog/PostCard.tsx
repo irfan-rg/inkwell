@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, User, PenTool } from "lucide-react";
 import { formatDate, calculateReadingTime } from "@/lib/utils";
 
 interface PostCardProps {
@@ -50,8 +50,8 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
               />
             </div>
           ) : (
-            <div className="w-24 h-24 shrink-0 rounded-lg bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-3xl">
-              𓆰
+            <div className="w-24 h-24 shrink-0 rounded-lg bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
+              <PenTool className="h-10 w-10 text-gold-600" />
             </div>
           )}
 
@@ -110,8 +110,10 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
             />
           </div>
         ) : (
-          <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-6xl">
-            𓆰
+          <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
+            <div className="p-2 rounded-lg bg-primary/10">
+                <PenTool className="h-5 w-5 text-primary -rotate-90" />
+            </div>
           </div>
         )}
 

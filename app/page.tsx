@@ -10,8 +10,10 @@ import { PostListSkeleton } from "@/components/ui/post-skeleton";
 import { PenTool, BookOpen, Users, ArrowDown, ArrowRight, PencilLine } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import Footer from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 
 export default function LandingPage() {
+  const [showNavbar, setShowNavbar] = useState(false);
   // Fetch recent published posts
   const { data: recentPosts, isLoading } = api.post.list.useQuery({
     published: true,
@@ -20,6 +22,32 @@ export default function LandingPage() {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const supabase = createClient();
+
+  // Handle scroll to show/hide navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      // Get the height of the hero section (first viewport)
+      const heroHeight = window.innerHeight;
+      // Calculate 70-80% of hero height
+      const scrollThreshold = heroHeight * 0.75; // 75% of hero section
+      
+      // Show navbar if scrolled past threshold
+      if (window.scrollY > scrollThreshold) {
+        setShowNavbar(true);
+      } else {
+        setShowNavbar(false);
+      }
+    };
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+    
+    // Call once on mount to check initial position
+    handleScroll();
+
+    // Cleanup
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,6 +74,15 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen">
+      {/* Fixed Navbar - Shows after scrolling past hero */}
+      <div 
+        className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+          showNavbar ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
+        <Navbar />
+      </div>
+
       {/* SECTION 1 - HERO (Above the fold) */}
       <section className="relative min-h-screen flex items-center justify-center bg-linear-to-br from-paper-cream via-paper-white to-paper-cream">
         <div className="max-w-5xl mx-auto px-6 text-center">
@@ -69,7 +106,7 @@ export default function LandingPage() {
 
           {/* Description */}
           <p className="text-lg font-body text-ink-blue max-w-2xl mx-auto mt-6 leading-relaxed">
-            A sanctuary for writers and readers who appreciate the craft of storytelling
+            A sanctuary for Writers and Readers who appreciate the craft of Storytelling.
           </p>
 
           {/* CTA Buttons */}
@@ -100,7 +137,7 @@ export default function LandingPage() {
       <section className="py-24 bg-paper-white">
         <div className="max-w-7xl mx-auto px-6">
           {/* Section heading */}
-          <h2 className="text-4xl md:text-5xl font-display font-semibold text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-20">
             Why Inkwell?
           </h2>
 
@@ -152,7 +189,7 @@ export default function LandingPage() {
       <section className="py-24 bg-paper-cream">
         <div className="max-w-7xl mx-auto px-6">
           {/* Section heading */}
-          <h2 className="text-4xl md:text-5xl font-display font-semibold text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-16">
             Latest Stories
           </h2>
 
@@ -192,7 +229,7 @@ export default function LandingPage() {
       <section className="py-24 bg-linear-to-b from-paper-white to-gold-50">
         <div className="max-w-4xl mx-auto px-6 text-center">
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-display font-semibold mb-6">
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
             Ready to share your story?
           </h2>
 

@@ -175,7 +175,7 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex">
+            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex bg-accent hover:bg-primary/90 shadow-md hover:shadow-lg transition-all">
               <Link href="/auth/login">Login</Link>
             </Button>
           )}

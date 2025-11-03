@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PlusCircle, FileText, BookOpen, Edit, Trash2, Calendar, Clock, Archive, FolderOpen } from "lucide-react";
+import { PlusCircle, FileText, BookOpen, Edit, Trash2, Calendar, Clock, Archive, FolderOpen, PenTool } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -94,6 +94,55 @@ export default function DashboardPage() {
     onSuccess: (data, variables) => {
       toast.success(
         variables.published ? "Post published successfully" : "Post unpublished successfully"
+      );
+    },
+    onSettled: () => {
+      utils.post.getUserPosts.invalidate();
+    },
+  });
+
+  // Archive mutation with separate toast messages
+  const archiveMutation = api.post.update.useMutation({
+    onMutate: async (updatedPost) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: [['post', 'getUserPosts'], { type: 'query' }],
+      });
+      
+      // Snapshot previous value
+      const previousPosts = queryClient.getQueryData([
+        ['post', 'getUserPosts'],
+        { type: 'query' },
+      ]);
+      
+      // Optimistically update the post
+      queryClient.setQueryData(
+        [['post', 'getUserPosts'], { type: 'query' }],
+        (old: any) => {
+          if (!old) return old;
+          return old.map((post: any) =>
+            post.id === updatedPost.id
+              ? { ...post, archived: updatedPost.archived }
+              : post
+          );
+        }
+      );
+      
+      return { previousPosts };
+    },
+    onError: (err, updatedPost, context) => {
+      // Rollback on error
+      if (context?.previousPosts) {
+        queryClient.setQueryData(
+          [['post', 'getUserPosts'], { type: 'query' }],
+          context.previousPosts
+        );
+      }
+      toast.error(err.message || "Failed to update post");
+    },
+    onSuccess: (data, variables) => {
+      toast.success(
+        variables.archived ? "Post archived successfully" : "Post unarchived successfully"
       );
     },
     onSettled: () => {
@@ -178,7 +227,7 @@ export default function DashboardPage() {
 
   // Handle toggle archive status
   const handleToggleArchive = (postId: string, currentArchived: boolean) => {
-    updateMutation.mutate({
+    archiveMutation.mutate({
       id: postId,
       archived: !currentArchived,
     });
@@ -345,8 +394,10 @@ export default function DashboardPage() {
                         />
                       </div>
                     ) : (
-                      <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center text-5xl">
-                        𓆰
+                      <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
+                        <div className="py-24 px-50 rounded-lg bg-primary/10">
+                            <PenTool className="h-8 w-8 text-primary -rotate-90" />
+                        </div>
                       </div>
                     )}
 
@@ -384,7 +435,7 @@ export default function DashboardPage() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleToggleArchive(post.id, post.archived)}
-                            disabled={updateMutation.isPending}
+                            disabled={archiveMutation.isPending}
                             title="Archive post"
                           >
                             <Archive className="h-3.5 w-3.5 text-orange-600" />
@@ -394,7 +445,7 @@ export default function DashboardPage() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleToggleArchive(post.id, post.archived)}
-                            disabled={updateMutation.isPending}
+                            disabled={archiveMutation.isPending}
                             title="Unarchive post"
                           >
                             <Archive className="h-3.5 w-3.5 text-green-600" />
