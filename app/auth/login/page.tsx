@@ -71,7 +71,7 @@ export default function LoginPage() {
         {/* Heading */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-semibold mb-2">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">Sign in to continue</p>
+          <p className="text-sm text-muted-foreground">Log in to continue</p>
         </div>
 
         {/* Form */}
@@ -130,10 +130,10 @@ export default function LoginPage() {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Logging in...
               </>
             ) : (
-              "Sign in"
+              "Log in"
             )}
           </Button>
         </form>

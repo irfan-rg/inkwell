@@ -105,7 +105,7 @@ export default function LandingPage() {
           </p>
 
           {/* Description */}
-          <p className="text-lg font-body text-ink-blue max-w-2xl mx-auto mt-6 leading-relaxed">
+          <p className="text-lg font-medium text-ink-blue max-w-2xl mx-auto mt-6 leading-relaxed">
             A sanctuary for Writers and Readers who appreciate the craft of Storytelling.
           </p>
 
