@@ -195,7 +195,7 @@ export default function LandingPage() {
 
           {/* Posts grid */}
           {isLoading ? (
-            <PostListSkeleton count={6} />
+            <PostListSkeleton count={3} />
           ) : recentPosts && recentPosts.length > 0 ? (
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

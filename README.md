@@ -320,6 +320,124 @@ inkwell/
 
 ---
 
+## 📊 Database Schema
+
+### Posts Table
+```typescript
+posts {
+  id: uuid (primary key)
+  title: varchar(255) (not null)
+  content: text (markdown, not null)
+  slug: varchar(255) (unique, not null)
+  coverImage: text (nullable, Supabase Storage URL)
+  excerpt: text (nullable)
+  published: boolean (default: false)
+  archived: boolean (default: false)
+  authorId: uuid (references auth.users, not null)
+  authorName: varchar(255) (denormalized, not null)
+  authorEmail: varchar(255) (denormalized, not null)
+  createdAt: timestamp (default: now())
+  updatedAt: timestamp (default: now())
+}
+```
+
+**Indexes:**
+- `slug_idx` on `slug` for fast lookups
+- `author_id_idx` on `authorId` for user post queries
+- `published_idx` on `published` for filtering
+- `created_at_idx` on `createdAt` for sorting
+
+### Categories Table
+```typescript
+categories {
+  id: uuid (primary key)
+  name: varchar(100) (unique, not null)
+  slug: varchar(100) (unique, not null)
+  description: text (nullable)
+  createdAt: timestamp (default: now())
+  updatedAt: timestamp (default: now())
+}
+```
+
+**Indexes:**
+- `slug_idx` on `slug` for fast lookups
+- `name_idx` on `name` for category searches
+
+### Post Categories (Junction Table)
+```typescript
+postCategories {
+  postId: uuid (references posts.id, on delete cascade)
+  categoryId: uuid (references categories.id, on delete cascade)
+  PRIMARY KEY (postId, categoryId)
+}
+```
+
+**Relationships:**
+- Posts → Post Categories (one-to-many)
+- Categories → Post Categories (one-to-many)
+- Many-to-many relationship between Posts and Categories
+
+---
+
+## 🔌 tRPC Router Structure
+
+### Root Router (`server/api/root.ts`)
+```typescript
+export const appRouter = createTRPCRouter({
+  post: postRouter,
+  category: categoryRouter,
+  upload: uploadRouter,
+});
+```
+
+### Post Router (`server/api/routers/post.ts`)
+**Public Procedures:**
+- `list` - Get all published posts with filtering options (category, search, pagination)
+- `getBySlug` - Get single post by slug with related posts
+
+**Protected Procedures (require authentication):**
+- `getUserPosts` - Get authenticated user's posts (all statuses)
+- `create` - Create new post with categories
+- `update` - Update existing post (author-only)
+- `delete` - Delete post (author-only)
+
+**Input Validation:**
+- Zod schemas for all inputs
+- Slug uniqueness validation
+- Author authorization checks
+- Category existence validation
+
+### Category Router (`server/api/routers/category.ts`)
+**Public Procedures:**
+- `list` - Get all categories with post counts
+- `getBySlug` - Get category by slug with posts
+
+**Protected Procedures:**
+- `create` - Create new category
+- `update` - Update category
+- `delete` - Delete category (prevents if posts exist)
+
+**Input Validation:**
+- Zod schemas for name and slug
+- Unique constraint checks
+- Cascade protection on delete
+
+### Upload Router (`server/api/routers/upload.ts`)
+**Protected Procedures:**
+- `getSignedUrl` - Generate signed URL for Supabase Storage upload
+  - Validates file type (images only)
+  - Enforces size limits (5MB max)
+  - Returns signed URL and file path
+  - Client uploads directly to Supabase
+
+**Security:**
+- File type validation (jpeg, png, webp)
+- Size limit enforcement
+- Signed URLs with expiration
+- Storage bucket policies
+
+---
+
 ## 🧪 Testing Checklist
 
 ### Authentication
