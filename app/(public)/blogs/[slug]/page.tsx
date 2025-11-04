@@ -105,7 +105,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     <article className="min-h-screen">
       {/* HERO SECTION - with cover image */}
       {post.coverImage ? (
-        <div className="relative w-full aspect-21/9 overflow-hidden">
+        <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
           {/* Cover image */}
           <Image
             src={post.coverImage}
@@ -116,13 +116,13 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             sizes="100vw"
           />
           
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+          {/* Dark overlay - stronger gradient */}
+          <div className="absolute inset-0 bg-linear-to-t from-black via-black/0 to-transparent" />
           
           {/* Title overlaid at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-            <div className="max-w-4xl">
-              <h1 className="text-4xl md:text-6xl font-display font-bold text-white">
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16">
+            <div className="max-w-6xl mx-auto -mb-10">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-hero font-bold text-white leading-tight tracking-normal">
                 {post.title}
               </h1>
             </div>
@@ -131,8 +131,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       ) : (
         /* HERO SECTION - without cover image */
         <div className="bg-linear-to-b from-gold-50 to-paper-cream py-16 md:py-24 text-center">
-          <div className="max-w-4xl mx-auto px-6">
-            <h1 className="text-4xl md:text-6xl font-display font-bold">
+          <div className="max-w-5xl mx-auto px-6">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif font-normal italic leading-tight tracking-normal">
               {post.title}
             </h1>
           </div>
