@@ -235,25 +235,25 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* HEADER SECTION */}
-        <div className="border-b border-border py-8">
-          <div className="flex justify-between items-center flex-wrap gap-4">
+        <div className="border-b border-border py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             {/* Left: Heading */}
-            <h1 className="text-4xl font-display font-bold">Your Stories</h1>
+            <h1 className="text-3xl sm:text-4xl font-display font-bold mb-2 sm:mb-0 -mt-4 sm:mt-0">Your Stories</h1>
 
             {/* Right: Action buttons */}
-            <div className="flex gap-3">
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/dashboard/categories">
-                  <FolderOpen className="mr-2 h-5 w-5" />
-                  Categories
-                </Link>
+            <div className="flex w-full justify-evenly gap-3 sm:w-auto">
+              <Button size="default" variant="outline" asChild>
+              <Link href="/dashboard/categories">
+                <FolderOpen className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-sm sm:text-base">Categories</span>
+              </Link>
               </Button>
-              <Button size="lg" asChild>
-                <Link href="/dashboard/new">
-                  <PlusCircle className="mr-2 h-5 w-5" />
-                  New Post
+              <Button size="default" asChild>
+              <Link href="/dashboard/new">
+                <PlusCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-sm sm:text-base">New Post</span>
                 </Link>
               </Button>
             </div>
@@ -261,109 +261,115 @@ export default function DashboardPage() {
         </div>
 
         {/* STATS SECTION */}
-        <div className="py-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="py-6 sm:py-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {/* Total posts */}
           <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
-            <div className="p-3 px-6 py-2">
+            <div className="p-3 sm:p-4">
               <div className="flex items-start justify-between">
-                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                  <FileText className="h-5 w-5 text-primary" />
+                <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-display font-bold text-primary">{stats.totalPosts}</p>
+                  <p className="text-2xl sm:text-3xl font-display font-bold text-primary">{stats.totalPosts}</p>
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground mt-4">Total Posts</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-3 sm:mt-4">Total Posts</p>
             </div>
           </Card>
 
           {/* Published */}
           <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
-            <div className="p-3 px-6 py-2">
+            <div className="p-3 sm:p-4">
               <div className="flex items-start justify-between">
-                <div className="p-2 rounded-lg bg-green-100 group-hover:bg-green-200 dark:bg-green-950/50 dark:group-hover:bg-green-950/70 transition-colors">
-                  <BookOpen className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div className="p-1.5 sm:p-2 rounded-lg bg-green-100 group-hover:bg-green-200 dark:bg-green-950/50 dark:group-hover:bg-green-950/70 transition-colors">
+                  <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-display font-bold text-green-600 dark:text-green-400">{stats.publishedPosts}</p>
+                  <p className="text-2xl sm:text-3xl font-display font-bold text-green-600 dark:text-green-400">{stats.publishedPosts}</p>
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground mt-4">Published</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-3 sm:mt-4">Published</p>
             </div>
           </Card>
 
           {/* Drafts */}
           <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
-            <div className="p-3 px-6 py-2">
+            <div className="p-3 sm:p-4">
               <div className="flex items-start justify-between">
-                <div className="p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 dark:bg-orange-950/50 dark:group-hover:bg-orange-950/70 transition-colors">
-                  <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                <div className="p-1.5 sm:p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 dark:bg-orange-950/50 dark:group-hover:bg-orange-950/70 transition-colors">
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-display font-bold text-orange-600 dark:text-orange-400">{stats.draftPosts}</p>
+                  <p className="text-2xl sm:text-3xl font-display font-bold text-orange-600 dark:text-orange-400">{stats.draftPosts}</p>
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground mt-4">Drafts</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-3 sm:mt-4">Drafts</p>
             </div>
           </Card>
 
           {/* Archived */}
           <Card className="border-2 hover:shadow-lg transition-all duration-300 group">
-            <div className="p-3 px-6 py-2">
+            <div className="p-3 sm:p-4">
               <div className="flex items-start justify-between">
-                <div className="p-2 rounded-lg bg-gray-100 group-hover:bg-gray-200 dark:bg-gray-950/50 dark:group-hover:bg-gray-950/70 transition-colors">
-                  <Archive className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <div className="p-1.5 sm:p-2 rounded-lg bg-gray-100 group-hover:bg-gray-200 dark:bg-gray-950/50 dark:group-hover:bg-gray-950/70 transition-colors">
+                  <Archive className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-400" />
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-display font-bold text-gray-600 dark:text-gray-400">{stats.archivedPosts}</p>
+                  <p className="text-2xl sm:text-3xl font-display font-bold text-gray-600 dark:text-gray-400">{stats.archivedPosts}</p>
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground mt-4">Archived</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-3 sm:mt-4">Archived</p>
             </div>
           </Card>
         </div>
       </div>
 
       {/* TABS SECTION */}
-      <div className="pt-8">
+      <div className="pt-6 sm:pt-8">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="all">
-              All
-              <Badge variant="secondary" className="ml-2">
-                {stats.totalPosts}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="published">
-              Published
-              <Badge variant="secondary" className="ml-2">
-                {stats.publishedPosts}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="draft">
-              Drafts
-              <Badge variant="secondary" className="ml-2">
-                {stats.draftPosts}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="archived">
-              Archived
-              <Badge variant="secondary" className="ml-2">
-                {stats.archivedPosts}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6 mb-6">
+            <TabsList className="inline-flex min-w-full sm:min-w-0">
+              <TabsTrigger value="all" className="flex-1 sm:flex-none text-xs sm:text-sm">
+                <span className="hidden sm:inline">All</span>
+                <span className="sm:hidden">All</span>
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
+                  {stats.totalPosts}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="published" className="flex-1 sm:flex-none text-xs sm:text-sm">
+                <span className="hidden sm:inline">Published</span>
+                <span className="sm:hidden">Pub</span>
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
+                  {stats.publishedPosts}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="draft" className="flex-1 sm:flex-none text-xs sm:text-sm">
+                <span className="hidden sm:inline">Drafts</span>
+                <span className="sm:hidden">Draft</span>
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
+                  {stats.draftPosts}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="archived" className="flex-1 sm:flex-none text-xs sm:text-sm">
+                <span className="hidden sm:inline">Archived</span>
+                <span className="sm:hidden">Arch</span>
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
+                  {stats.archivedPosts}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value={activeTab} className="py-6">
+          <TabsContent value={activeTab} className="py-4 sm:py-6">
             {/* POSTS LIST */}
             {isLoading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <Card key={i} className="p-0 overflow-hidden">
                     <Skeleton className="aspect-video w-full" />
-                    <div className="p-6 space-y-3">
-                      <Skeleton className="h-6 w-3/4" />
+                    <div className="p-4 sm:p-6 space-y-3">
+                      <Skeleton className="h-5 sm:h-6 w-3/4" />
                       <Skeleton className="h-4 w-full" />
                       <Skeleton className="h-4 w-2/3" />
                     </div>
@@ -381,7 +387,7 @@ export default function DashboardPage() {
                 }}
               />
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredPosts.map((post) => (
                   <Card key={post.id} className="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 group">
                     {/* Thumbnail */}
@@ -395,36 +401,36 @@ export default function DashboardPage() {
                       </div>
                     ) : (
                       <div className="aspect-video bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
-                        <div className="py-24 px-50 rounded-lg bg-primary/10">
-                            <PenTool className="h-8 w-8 text-primary -rotate-90" />
+                        <div className="p-4 rounded-lg bg-primary/10">
+                            <PenTool className="h-6 w-6 sm:h-8 sm:w-8 text-primary -rotate-90" />
                         </div>
                       </div>
                     )}
 
                     {/* Content */}
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                       {/* Status badge */}
-                      <Badge variant={post.published ? "default" : "secondary"} className="mb-3">
+                      <Badge variant={post.published ? "default" : "secondary"} className="mb-2 sm:mb-3 text-xs">
                         {post.published ? "Published" : "Draft"}
                       </Badge>
 
                       {/* Title */}
-                      <h3 className="text-xl font-display font-semibold line-clamp-2 mb-2">
+                      <h3 className="text-lg sm:text-xl font-display font-semibold line-clamp-2 mb-2">
                         {post.title}
                       </h3>
 
                       {/* Date */}
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
-                        <Calendar className="h-3.5 w-3.5" />
+                      <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                        <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         <span>{format(new Date(post.createdAt), "MMM d, yyyy")}</span>
                       </div>
 
                       {/* Action buttons */}
                       <div className="flex gap-2 flex-wrap">
                         {/* Edit button */}
-                        <Button size="sm" variant="outline" asChild className="flex-1">
+                        <Button size="sm" variant="outline" asChild className="flex-1 text-xs sm:text-sm">
                           <Link href={`/dashboard/edit/${post.id}`}>
-                            <Edit className="mr-1 h-3.5 w-3.5" />
+                            <Edit className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
                             Edit
                           </Link>
                         </Button>
@@ -438,7 +444,7 @@ export default function DashboardPage() {
                             disabled={archiveMutation.isPending}
                             title="Archive post"
                           >
-                            <Archive className="h-3.5 w-3.5 text-orange-600" />
+                            <Archive className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-orange-600" />
                           </Button>
                         ) : (
                           <Button

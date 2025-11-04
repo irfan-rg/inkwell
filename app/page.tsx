@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { api } from "@/lib/trpc";
 import { PostCard } from "@/components/blog/PostCard";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
-import { PenTool, BookOpen, Users, ArrowDown, ArrowRight, PencilLine } from "lucide-react";
+import { PenTool, BookOpen, Users, ArrowDown, ArrowRight, PencilLine, Compass } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import Footer from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -105,21 +105,21 @@ export default function LandingPage() {
           </p>
 
           {/* Description */}
-          <p className="text-lg font-medium text-ink-blue max-w-2xl mx-auto mt-6 leading-relaxed">
+          <p className="text-lg text-muted-foreground font-body italic text-ink-blue max-w-2xl mx-auto mt-8 leading-relaxed">
             A sanctuary for Writers and Readers who appreciate the craft of Storytelling.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-14">
             <Button size="lg" asChild className="text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
               <Link href={startWritingHref}>
-                <PenTool className="mr-2 h-5 w-5" />
+                <PenTool className="h-5 w-5 -rotate-95" />
                 Start Writing
               </Link>
             </Button>
             <Button size="lg" variant="secondary" asChild className="text-base font-semibold px-8">
               <Link href="/blogs">
-                <BookOpen className="mr-2 h-5 w-5" />
+                <Compass className="h-5 w-5" />
                 Explore Stories
               </Link>
             </Button>
@@ -241,7 +241,7 @@ export default function LandingPage() {
           {/* CTA Button */}
           <Button size="lg" asChild className="text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
             <Link href="/auth/signup">
-              <PenTool className="mr-2 h-5 w-5" />
+              <PenTool className="h-5 w-5 -rotate-95" />
               Get Started
             </Link>
           </Button>

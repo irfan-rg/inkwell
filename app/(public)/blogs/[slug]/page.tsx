@@ -105,7 +105,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     <article className="min-h-screen">
       {/* HERO SECTION - with cover image */}
       {post.coverImage ? (
-        <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
+        <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] overflow-hidden">
           {/* Cover image */}
           <Image
             src={post.coverImage}
@@ -120,9 +120,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="absolute inset-0 bg-linear-to-t from-black via-black/0 to-transparent" />
           
           {/* Title overlaid at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16">
-            <div className="max-w-6xl mx-auto -mb-10">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-hero font-bold text-white leading-tight tracking-normal">
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-12 lg:p-16">
+            <div className="max-w-6xl mx-auto">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-hero font-bold text-white leading-tight tracking-normal">
                 {post.title}
               </h1>
             </div>
@@ -130,9 +130,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       ) : (
         /* HERO SECTION - without cover image */
-        <div className="bg-linear-to-b from-gold-50 to-paper-cream py-16 md:py-24 text-center">
-          <div className="max-w-5xl mx-auto px-6">
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif font-normal italic leading-tight tracking-normal">
+        <div className="bg-linear-to-b from-gold-50 to-paper-cream py-12 sm:py-16 md:py-24 text-center">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-hero font-bold leading-tight tracking-normal">
               {post.title}
             </h1>
           </div>
@@ -140,44 +140,44 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       {/* BACK BUTTON */}
-      <div className="max-w-4xl mx-auto px-6 pt-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/blogs">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to stories
+            Back
           </Link>
         </Button>
       </div>
 
       {/* METADATA SECTION */}
-      <div className="max-w-4xl mx-auto px-6 py-8 border-b border-border">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {/* Left side: Author info */}
           <div className="flex items-center gap-3">
-            <Avatar className="h-12 w-12">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
               <AvatarFallback className="bg-primary text-primary-foreground">
                 {getAuthorInitials(post.authorName)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">{post.authorName || "Anonymous"}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-medium text-sm sm:text-base">{post.authorName || "Anonymous"}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {format(new Date(post.createdAt), "MMM d, yyyy")}
               </p>
             </div>
           </div>
 
           {/* Right side: Reading time, categories, and share button */}
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4" />
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+              <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{readingTime} min read</span>
             </div>
             
             {post.postCategories && post.postCategories.length > 0 && (
               <div className="flex gap-2">
                 {post.postCategories.slice(0, 2).map((pc: { categoryId: string; category: { name: string } }) => (
-                  <Badge key={pc.categoryId} variant="outline">
+                  <Badge key={pc.categoryId} variant="outline" className="text-xs">
                     {pc.category.name}
                   </Badge>
                 ))}
@@ -185,29 +185,32 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Share button */}
-            <Button
+            <div className="ml-auto">
+              <Button
               variant="outline"
               size="sm"
               onClick={handleShare}
               className="gap-2"
-            >
-              <Share2 className="h-4 w-4" />
-              Share
-            </Button>
+              >
+              <Share2 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Share</span>
+              </Button>
+            </div>
+            
           </div>
         </div>
       </div>
 
       {/* ARTICLE CONTENT */}
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Apply prose classes for beautiful typography */}
-        <div className="prose prose-lg dark:prose-invert max-w-none
+        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none
           prose-headings:font-display prose-headings:tracking-tight
-          prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6
+          prose-p:leading-relaxed prose-p:mb-4 sm:prose-p:mb-6
           prose-a:text-gold-600 prose-a:no-underline hover:prose-a:underline
           prose-blockquote:border-l-4 prose-blockquote:border-gold-500 prose-blockquote:italic
-          prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-          prose-pre:bg-muted prose-pre:border prose-pre:border-border
+          prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+          prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-pre:text-sm
           prose-img:rounded-lg prose-img:shadow-md prose-img:w-full">
           <MarkdownRenderer content={post.content} />
         </div>
@@ -215,16 +218,16 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* RELATED POSTS SECTION */}
       {firstCategoryId && filteredRelatedPosts.length > 0 && (
-        <div className="bg-paper-cream border-t border-border py-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-3xl font-display font-semibold mb-8">
+        <div className="w-full bg-paper-cream border-t border-border py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl sm:text-3xl font-display font-semibold mb-6 sm:mb-8">
               Related Stories
             </h2>
             
             {relatedLoading ? (
               <PostListSkeleton count={3} />
             ) : (
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredRelatedPosts.slice(0, 3).map((relatedPost) => (
                   <PostCard
                     key={relatedPost.id}

@@ -198,31 +198,31 @@ export default function CategoriesPage() {
   const slugPreview = formData.name ? generateSlug(formData.name) : "";
 
   return (
-  <div className="max-w-7xl mx-auto px-6 space-y-8">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8 py-6 sm:py-0">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Manage Categories</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1 sm:space-y-2">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Manage Categories</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Create and manage categories for organizing your posts
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={handleCreate}>
+            <Button onClick={handleCreate} className="w-full sm:w-auto">
               <Plus className="mr-2 h-4 w-4" />
               Add New Category
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[95vw] sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-lg sm:text-xl">
                 {editingCategory ? "Edit Category" : "Create New Category"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name" className="text-sm">Name *</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -231,6 +231,7 @@ export default function CategoriesPage() {
                   }
                   placeholder="e.g., Technology, Travel, Food"
                   required
+                  className="text-sm sm:text-base"
                 />
                 {slugPreview && (
                   <p className="text-xs text-muted-foreground">
@@ -240,7 +241,7 @@ export default function CategoriesPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description" className="text-sm">Description</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
@@ -249,19 +250,21 @@ export default function CategoriesPage() {
                   }
                   placeholder="Brief description of this category"
                   rows={3}
+                  className="text-sm sm:text-base"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
                   disabled={isSubmitting}
+                  className="w-full sm:w-auto text-sm"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto text-sm">
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingCategory ? "Update" : "Create"}
                 </Button>
@@ -291,17 +294,17 @@ export default function CategoriesPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
             <Card key={category.id} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 flex-1">
-                    <CardTitle className="flex items-center gap-2">
-                      <Folder className="h-5 w-5 text-primary" />
-                      {category.name}
+              <CardHeader className="pb-3 sm:pb-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 flex-1 min-w-0">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                      <Folder className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
+                      <span className="truncate">{category.name}</span>
                     </CardTitle>
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-4 flex-wrap">
                       <Badge variant="secondary" className="text-xs">
                         {category.slug}
                       </Badge>
@@ -312,27 +315,29 @@ export default function CategoriesPage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5 sm:gap-1 shrink-0">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => handleEdit(category)}
+                      className="h-8 w-8 sm:h-9 sm:w-9"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => setDeleteConfirmId(category.id)}
+                      className="h-8 w-8 sm:h-9 sm:w-9"
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
               {category.description && (
-                <CardContent>
-                  <CardDescription className="line-clamp-2 -mt-4">
+                <CardContent className="pt-0">
+                  <CardDescription className="line-clamp-2 text-xs sm:text-sm">
                     {category.description}
                   </CardDescription>
                 </CardContent>
@@ -347,19 +352,19 @@ export default function CategoriesPage() {
         open={!!deleteConfirmId}
         onOpenChange={() => setDeleteConfirmId(null)}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-lg sm:text-xl">Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm sm:text-base">
               This will remove the category from all posts. This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
+            <AlertDialogCancel className="w-full sm:w-auto text-sm">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteConfirmId && handleDelete(deleteConfirmId)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90 text-sm"
             >
               {deleteMutation.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

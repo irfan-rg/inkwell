@@ -99,21 +99,21 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md shadow-sm">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
+      <div className="max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link 
           href="/" 
-          className="flex items-center gap-2 transition-opacity hover:opacity-80"
+          className="flex items-center gap-1.5 sm:gap-2 transition-opacity hover:opacity-80"
           onClick={closeMobileMenu}
         >
-          <div className="p-2 rounded-lg bg-primary/10">
-            <PenTool className="h-5 w-5 text-primary -rotate-90" />
+          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
+            <PenTool className="h-4 w-4 sm:h-5 sm:w-5 text-primary -rotate-90" />
           </div>
-          <span className="font-display text-xl font-bold">Inkwell</span>
+          <span className="font-display text-lg sm:text-xl font-bold">Inkwell</span>
         </Link>
 
         {/* Desktop Navigation - Left side */}
-        <div className="hidden md:flex md:items-center md:gap-8 md:flex-1 md:ml-12">
+        <div className="hidden md:flex md:items-center md:gap-6 lg:gap-8 md:flex-1 md:ml-8 lg:ml-12">
           <Link 
             href="/blogs" 
             className={getLinkClasses("/blogs")}
@@ -132,18 +132,17 @@ export function Navbar() {
         </div>
 
         {/* Right Side - Auth & Theme */}
-        <div className="flex items-center gap-3">
-          <div className="hidden md:block">
-            <ThemeToggle />
-          </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Toggle - Always visible */}
+          <ThemeToggle />
 
           {isAuthenticated ? (
             /* User Profile Dropdown */
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
+                <Button variant="ghost" className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-full">
+                  <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                       {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>
@@ -159,12 +158,6 @@ export function Navbar() {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="cursor-pointer">
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   onClick={handleLogout}
                   className="cursor-pointer text-destructive focus:text-destructive"
@@ -175,7 +168,7 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex bg-accent hover:bg-primary/90 shadow-md hover:shadow-lg transition-all">
+            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex bg-accent hover:bg-primary/90 shadow-md hover:shadow-lg transition-all text-sm">
               <Link href="/auth/login">Login</Link>
             </Button>
           )}
@@ -196,10 +189,10 @@ export function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <div className="flex flex-col space-y-4 px-6 py-4">
+          <div className="flex flex-col space-y-3 px-4 sm:px-6 py-4">
             <Link 
               href="/blogs" 
-              className={getLinkClasses("/blogs")}
+              className={`${getLinkClasses("/blogs")} text-base`}
               onClick={closeMobileMenu}
             >
               Blogs
@@ -209,7 +202,7 @@ export function Navbar() {
               <>
                 <Link 
                   href="/dashboard" 
-                  className={getLinkClasses("/dashboard")}
+                  className={`${getLinkClasses("/dashboard")} text-base`}
                   onClick={closeMobileMenu}
                 >
                   Dashboard
@@ -231,10 +224,6 @@ export function Navbar() {
                 </Button>
               </Link>
             )}
-
-            <div className="pt-2 border-t">
-              <ThemeToggle />
-            </div>
           </div>
         </div>
       )}

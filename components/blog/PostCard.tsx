@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Calendar, Clock, User, PenTool } from "lucide-react";
 import { formatDate, calculateReadingTime } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface PostCardProps {
   post: {
@@ -37,28 +38,28 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
   if (variant === "compact") {
     return (
       <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
-        <Link href={`/blogs/${post.slug}`} className="flex gap-4 p-4">
+        <Link href={`/blogs/${post.slug}`} className="flex gap-3 sm:gap-4 p-3 sm:p-4">
           {/* Smaller image */}
           {post.coverImage ? (
-            <div className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg overflow-hidden">
               <Image
                 src={post.coverImage}
                 alt={post.title}
                 fill
                 className="object-cover hover:opacity-95 transition-opacity rounded-lg"
-                sizes="96px"
+                sizes="(max-width: 640px) 80px, 96px"
               />
             </div>
           ) : (
-            <div className="w-24 h-24 shrink-0 rounded-lg bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
-              <PenTool className="h-10 w-10 text-gold-600" />
+            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg bg-linear-to-br from-gold-100 to-gold-200 flex items-center justify-center">
+              <PenTool className="h-8 w-8 sm:h-10 sm:w-10 text-gold-600" />
             </div>
           )}
 
           <div className="flex-1 min-w-0">
             {/* Categories */}
             {post.postCategories && post.postCategories.length > 0 && (
-              <div className="flex gap-2 mb-2">
+              <div className="flex gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
                 <Badge variant="outline" className="text-xs">
                   {post.postCategories[0].category.name}
                 </Badge>
@@ -71,15 +72,16 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
             )}
 
             {/* Title */}
-            <h3 className="text-lg font-display font-semibold text-ink-black hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-2">
+            <h3 className="text-base sm:text-lg font-display font-semibold text-ink-black hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-1.5 sm:mb-2">
               {post.title}
             </h3>
 
             {/* Simpler metadata */}
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 sm:gap-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                <span>{formatDate(new Date(post.createdAt))}</span>
+                <span className="hidden sm:inline">{formatDate(new Date(post.createdAt))}</span>
+                <span className="sm:hidden">{format(new Date(post.createdAt), "MMM d")}</span>
               </div>
               {readingTime && (
                 <div className="flex items-center gap-1">
@@ -118,10 +120,10 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
         )}
 
         {/* Content section */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Categories at top */}
           {post.postCategories && post.postCategories.length > 0 && (
-            <div className="flex gap-2 mb-3 flex-wrap">
+            <div className="flex gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
               {post.postCategories.slice(0, 2).map((pc) => (
                 <Badge key={pc.category.id} variant="outline" className="text-xs">
                   {pc.category.name}
@@ -136,36 +138,37 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
           )}
 
           {/* Title */}
-          <h3 className="text-2xl font-display font-semibold text-ink-black group-hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-3">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-display font-semibold text-ink-black group-hover:text-gold-600 transition-colors duration-200 line-clamp-2 mb-2 sm:mb-3">
             {post.title}
           </h3>
 
           {/* Excerpt */}
           {post.excerpt && (
-            <p className="text-sm font-body text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+            <p className="text-xs sm:text-sm font-body text-muted-foreground leading-relaxed line-clamp-3 mb-3 sm:mb-4">
               {post.excerpt}
             </p>
           )}
 
           {/* Metadata footer */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 text-xs text-muted-foreground">
             {/* Left side: Author */}
             {showAuthor && post.authorName && (
               <div className="flex items-center gap-1">
-                <User className="h-3.5 w-3.5" />
-                <span>{post.authorName}</span>
+                <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="truncate">{post.authorName}</span>
               </div>
             )}
 
             {/* Right side: Date + Reading time */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                <span>{formatDate(new Date(post.createdAt))}</span>
+                <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="hidden sm:inline">{formatDate(new Date(post.createdAt))}</span>
+                <span className="sm:hidden">{format(new Date(post.createdAt), "MMM d")}</span>
               </div>
               {readingTime && (
                 <div className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
+                  <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>{readingTime} min</span>
                 </div>
               )}

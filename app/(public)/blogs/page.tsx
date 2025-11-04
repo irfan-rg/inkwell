@@ -51,23 +51,23 @@ export default function BlogsPage() {
   return (
     <div className="min-h-screen">
       {/* HERO SECTION */}
-      <section className="bg-linear-to-b from-paper-cream to-paper-white py-16 md:py-24 text-center">
-        <div className="max-w-4xl mx-auto px-6">
+      <section className="bg-linear-to-b from-paper-cream to-paper-white py-12 sm:py-16 md:py-24 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
           {/* Heading */}
-          <h1 className="text-5xl md:text-6xl font-display font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-3 sm:mb-4">
             Stories & Insights
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground">
             Explore our collection of stories
           </p>
         </div>
       </section>
 
       {/* SEARCH & FILTER SECTION */}
-      <section className="max-w-7xl mx-auto px-6 -mt-8">
-        <div className="bg-paper-white rounded-xl shadow-lg border p-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8">
+        <div className="bg-paper-white rounded-xl shadow-lg border p-4 sm:p-6">
           {/* SearchBar */}
           <SearchBar
             value={searchQuery}
@@ -90,9 +90,9 @@ export default function BlogsPage() {
                 variant="ghost"
                 size="sm"
                 onClick={clearAllFilters}
-                className="text-muted-foreground"
+                className="text-muted-foreground text-xs sm:text-sm"
               >
-                <X className="mr-2 h-4 w-4" />
+                <X className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                 Clear filters
               </Button>
             </div>
@@ -101,10 +101,10 @@ export default function BlogsPage() {
       </section>
 
       {/* POSTS SECTION */}
-      <section className="max-w-7xl mx-auto px-6 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Results header */}
-        <div className="flex justify-between items-center mb-8">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex justify-between items-center mb-6 sm:mb-8">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {isLoading ? (
               "Loading posts..."
             ) : (
@@ -117,7 +117,7 @@ export default function BlogsPage() {
         {isLoading ? (
           <PostListSkeleton count={6} />
         ) : posts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
@@ -132,23 +132,27 @@ export default function BlogsPage() {
 
         {/* Pagination */}
         {posts.length > 0 && (
-          <div className="mt-12 flex justify-center gap-2">
+          <div className="mt-10 sm:mt-12 flex justify-center gap-2">
             <Button
               variant="outline"
+              size="sm"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
+              className="text-xs sm:text-sm"
             >
               Previous
             </Button>
 
-            <span className="flex items-center px-4 text-sm text-muted-foreground">
+            <span className="flex items-center px-3 sm:px-4 text-xs sm:text-sm text-muted-foreground">
               Page {currentPage}
             </span>
 
             <Button
               variant="outline"
+              size="sm"
               onClick={() => setCurrentPage((p) => p + 1)}
               disabled={!hasMore}
+              className="text-xs sm:text-sm"
             >
               Next
             </Button>
