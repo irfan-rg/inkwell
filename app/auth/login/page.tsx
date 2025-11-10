@@ -63,15 +63,17 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center space-x-2">
-            <PenTool className="h-8 w-8 text-primary -rotate-90" />
-            <span className="text-2xl font-display font-bold">Inkwell</span>
+          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
+              <PenTool className="h-5 w-5 sm:h-5 sm:w-5 text-primary -rotate-90" />
+          </div>
+            <span className="text-3xl font-display font-bold">Inkwell</span>
           </Link>
         </div>
 
         {/* Heading */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-semibold mb-2">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">Log in to continue</p>
+          <h1 className="text-2xl font-display font-semibold mb-2">Welcome Back</h1>
+          <p className="text-sm text-muted-foreground font-medium">Log in to continue</p>
         </div>
 
         {/* Form */}
@@ -151,7 +153,7 @@ export default function LoginPage() {
             </div>
           </div>
           <Link href="/auth/signup" className="text-sm text-primary hover:underline">
-            Sign up
+            Sign Up
           </Link>
         </div>
       </Card>

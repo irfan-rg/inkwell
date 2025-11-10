@@ -36,7 +36,7 @@ const crimson = Crimson_Pro({
 
 export const metadata: Metadata = {
   title: "Inkwell - Share Your Stories",
-  description: "A modern blogging platform for writers and readers",
+  description: "A Modern Blogging Platform for Writers and Readers",
 };
 
 export default function RootLayout({

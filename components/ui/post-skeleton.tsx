@@ -9,9 +9,9 @@ export function PostSkeleton({ variant = "default" }: PostSkeletonProps) {
   const isCompact = variant === "compact";
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden pt-0">
       {/* Cover Image Skeleton */}
-      <Skeleton className={`w-full ${isCompact ? "h-40" : "h-48 md:h-56"}`} />
+      <Skeleton className={`w-full ${isCompact ? "h-40" : "h-48 md:h-56"} rounded-t-lg rounded-b-none`} />
 
       <CardHeader className={isCompact ? "pb-3" : "pb-4"}>
         {/* Category Badge Skeletons */}

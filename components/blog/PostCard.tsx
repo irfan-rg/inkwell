@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Calendar, Clock, User, PenTool } from "lucide-react";
+import { Calendar, Clock, PenTool, UserRoundPen } from "lucide-react";
 import { formatDate, calculateReadingTime } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -154,8 +154,8 @@ export function PostCard({ post, variant = "default", showAuthor = true }: PostC
             {/* Left side: Author */}
             {showAuthor && post.authorName && (
               <div className="flex items-center gap-1">
-                <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                <span className="truncate">{post.authorName}</span>
+                <UserRoundPen className="h-3 w-3 sm:h-3.5 sm:w-3.5 font-bold" />
+                <span className="truncate font-bold">{post.authorName}</span>
               </div>
             )}
 

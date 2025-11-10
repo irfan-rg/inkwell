@@ -120,15 +120,23 @@ export default function LandingPage() {
             <Button size="lg" variant="secondary" asChild className="text-base font-semibold px-8">
               <Link href="/blogs">
                 <Compass className="h-5 w-5" />
-                Explore Stories
+                Explore 
               </Link>
             </Button>
           </div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-            <p className="text-sm text-primary">Scroll to explore</p>
-            <ArrowDown className="h-5 w-5 text-primary" />
+          <div>
+            {/* Desktop / tablet: full label + arrow */}
+            <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce">
+              <p className="text-sm text-primary">Scroll to Explore</p>
+              <ArrowDown className="h-5 w-5 text-primary" />
+            </div>
+
+            {/* Mobile: compact arrow only, less intrusive */}
+            <div className="flex md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 items-center animate-bounce bg-white/70 dark:bg-black/50 p-1 rounded-full">
+              <ArrowDown className="h-4 w-4 text-primary" />
+            </div>
           </div>
         </div>
       </section>

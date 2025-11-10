@@ -95,7 +95,7 @@ export default function SignupPage() {
         // Successful signup - user is automatically logged in by Supabase
         setSuccess(true);
         setLoading(false);
-        toast.success("Account created successfully! Welcome to Inkwell!");
+        toast.success("Account Created Successfully! Welcome to Inkwell!");
         
         // Redirect to dashboard immediately
         router.push("/dashboard");
@@ -113,14 +113,16 @@ export default function SignupPage() {
         {/* Logo & Header */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center justify-center gap-2 transition-colors hover:text-primary">
-            <PenTool className="h-8 w-8 -rotate-90 text-primary" />
-            <span className="font-display text-3xl">Inkwell</span>
+          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
+              <PenTool className="h-5 w-5 sm:h-5 sm:w-5 text-primary -rotate-90" />
+          </div>
+            <span className="font-bold text-3xl">Inkwell</span>
           </Link>
-          <h1 className="mt-6 font-display text-3xl">Create your account</h1>
-          <p className="mt-2 text-muted-foreground">Join Inkwell today</p>
+          <h1 className="mt-6 font-semibold text-2xl">Create your Account</h1>
+          <p className="mt-2 text-muted-foreground font-medium">Join Inkwell today</p>
         </div>
 
-        <form onSubmit={handleSignup} className="space-y-6">
+        <form onSubmit={handleSignup} className="-mt-8 space-y-6">
           {/* Error Alert */}
           {error && (
             <div className="flex items-center gap-2 rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-400">
@@ -145,7 +147,7 @@ export default function SignupPage() {
               <Input
                 id="name"
                 type="text"
-                placeholder="Your pen name"
+                placeholder="Your Pen Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="pl-10"
@@ -250,7 +252,7 @@ export default function SignupPage() {
               href="/auth/login" 
               className="font-medium text-primary transition-colors hover:text-primary/80"
             >
-              Sign in
+              Log In
             </Link>
           </p>
         </form>
