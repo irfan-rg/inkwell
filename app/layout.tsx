@@ -37,6 +37,22 @@ const crimson = Crimson_Pro({
 export const metadata: Metadata = {
   title: "Inkwell - Share Your Stories",
   description: "A Modern Blogging Platform for Writers and Readers",
+  icons: {
+    icon: [
+      {
+        url: '/favicon.svg',
+        type: 'image/svg+xml',
+      },
+      {
+        url: '/favicon.ico',
+        sizes: '32x32',
+      },
+    ],
+    apple: {
+      url: '/favicon.svg',
+      type: 'image/svg+xml',
+    },
+  },
 };
 
 export default function RootLayout({
