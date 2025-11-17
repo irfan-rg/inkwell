@@ -248,7 +248,7 @@ export default function LandingPage() {
 
           {/* CTA Button */}
           <Button size="lg" asChild className="text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
-            <Link href="/auth/signup">
+            <Link href={startWritingHref}>
               <PenTool className="h-5 w-5 -rotate-95" />
               Get Started
             </Link>

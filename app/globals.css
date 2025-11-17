@@ -51,19 +51,19 @@
   
   /* Light mode - Paper theme */
   --background: #FFFBF5;
-  --foreground: #0F172A;
+  --foreground: #1A1A1A;
   --card: #FEFEFE;
-  --card-foreground: #0F172A;
+  --card-foreground: #1A1A1A;
   --popover: #FEFEFE;
-  --popover-foreground: #0F172A;
+  --popover-foreground: #1A1A1A;
   --primary: #C9A961;
-  --primary-foreground: #0F172A;
+  --primary-foreground: #1A1A1A;
   --secondary: #E8DCC4;
-  --secondary-foreground: #0F172A;
+  --secondary-foreground: #1A1A1A;
   --muted: #E8DCC4;
-  --muted-foreground: #475569;
+  --muted-foreground: #525252;
   --accent: #C9A961;
-  --accent-foreground: #0F172A;
+  --accent-foreground: #1A1A1A;
   --destructive: #8B3A3A;
   --destructive-foreground: #FEFEFE;
   --border: #E8DCC4;
@@ -79,35 +79,35 @@
   
   /* Sidebar */
   --sidebar: #FEFEFE;
-  --sidebar-foreground: #0F172A;
+  --sidebar-foreground: #1A1A1A;
   --sidebar-primary: #C9A961;
-  --sidebar-primary-foreground: #0F172A;
+  --sidebar-primary-foreground: #1A1A1A;
   --sidebar-accent: #E8DCC4;
-  --sidebar-accent-foreground: #0F172A;
+  --sidebar-accent-foreground: #1A1A1A;
   --sidebar-border: #E8DCC4;
   --sidebar-ring: #C9A961;
 }
 
 .dark {
-  /* Dark mode - Ink theme */
-  --background: #1A1F2E;
+  /* Dark mode - Graphite theme */
+  --background: #1C1C1E;
   --foreground: #FFFBF5;
-  --card: #232938;
+  --card: #2C2C2E;
   --card-foreground: #FFFBF5;
-  --popover: #232938;
+  --popover: #2C2C2E;
   --popover-foreground: #FFFBF5;
   --primary: #C9A961;
-  --primary-foreground: #0F172A;
-  --secondary: #2C3444;
+  --primary-foreground: #1A1A1A;
+  --secondary: #3A3A3C;
   --secondary-foreground: #FFFBF5;
-  --muted: #2C3444;
-  --muted-foreground: #94A3B8;
+  --muted: #3A3A3C;
+  --muted-foreground: #AEAEB2;
   --accent: #C9A961;
-  --accent-foreground: #0F172A;
+  --accent-foreground: #1A1A1A;
   --destructive: #A64D4D;
   --destructive-foreground: #FFFBF5;
-  --border: #2C3444;
-  --input: #232938;
+  --border: #3A3A3C;
+  --input: #2C2C2E;
   --ring: #C9A961;
   
   /* Chart colors for dark mode */
@@ -118,13 +118,13 @@
   --chart-5: #8B3A3A;
   
   /* Sidebar dark mode */
-  --sidebar: #232938;
+  --sidebar: #2C2C2E;
   --sidebar-foreground: #FFFBF5;
   --sidebar-primary: #C9A961;
-  --sidebar-primary-foreground: #0F172A;
-  --sidebar-accent: #2C3444;
+  --sidebar-primary-foreground: #1A1A1A;
+  --sidebar-accent: #3A3A3C;
   --sidebar-accent-foreground: #FFFBF5;
-  --sidebar-border: #2C3444;
+  --sidebar-border: #3A3A3C;
   --sidebar-ring: #C9A961;
 }
 
@@ -139,13 +139,13 @@
   
   body {
     background-color: #FFFBF5;
-    color: #0F172A;
+    color: #1A1A1A;
     /* Subtle paper texture */
     background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03' /%3E%3C/svg%3E");
   }
   
   .dark body {
-    background-color: #1A1F2E;
+    background-color: #1C1C1E;
     color: #FFFBF5;
   }
   
@@ -166,7 +166,7 @@
    ============================================ */
 ::selection {
   background-color: #C9A961;
-  color: #0F172A;
+  color: #1A1A1A;
 }
 
 .dark ::selection {
@@ -185,7 +185,7 @@
   font-size: 1.125rem;
   line-height: 1.75;
   margin-bottom: 1.5rem;
-  color: #0F172A;
+  color: #1A1A1A;
 }
 
 .dark .prose p {
@@ -196,7 +196,7 @@
 .prose h2,
 .prose h3 {
   font-family: var(--font-display), 'Playfair Display', serif;
-  color: #0F172A;
+  color: #1A1A1A;
 }
 
 .dark .prose h1,
@@ -245,7 +245,7 @@
   font-style: italic;
   font-size: 1.5rem;
   font-family: var(--font-serif), 'Crimson Pro', serif;
-  color: #1E293B;
+  color: #262626;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
@@ -265,12 +265,12 @@
 }
 
 .dark .prose code {
-  background-color: #232938;
+  background-color: #2C2C2E;
   color: #A64D4D;
 }
 
 .prose pre {
-  background-color: #0F172A;
+  background-color: #1C1C1E;
   color: #FFFBF5;
   padding: 1.5rem;
   border-radius: 0.75rem;
@@ -365,11 +365,11 @@
 .wax-seal {
   position: relative;
   background-color: #C9A961;
-  color: #0F172A;
+  color: #1A1A1A;
   font-weight: 600;
   padding: 1rem 2rem;
   border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.12);
   transition: all 0.3s;
 }
 
@@ -384,7 +384,7 @@
 
 .dark .wax-seal {
   background-color: #B8954A;
-  color: #0F172A;
+  color: #1A1A1A;
 }
 
 /* ============================================
@@ -404,8 +404,8 @@
 }
 
 .dark .paper-card {
-  background-color: #232938;
-  border-color: #232938;
+  background-color: #2C2C2E;
+  border-color: #2C2C2E;
 }
 
 /* Folded corner effect */
@@ -423,7 +423,7 @@
 }
 
 .dark .paper-card::before {
-  border-color: transparent #2C3444 transparent transparent;
+  border-color: transparent #3A3A3C transparent transparent;
 }
 
 /* ============================================

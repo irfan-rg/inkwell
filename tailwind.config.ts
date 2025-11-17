@@ -14,16 +14,16 @@ const config: Config = {
       colors: {
         // Base colors - Ink & Paper theme
         ink: {
-          black: '#0F172A',
-          blue: '#1E293B',
-          DEFAULT: '#0F172A',
+          black: '#1A1A1A',
+          gray: '#262626',
+          DEFAULT: '#1A1A1A',
         },
         paper: {
           cream: '#FFFBF5',
           white: '#FEFEFE',
           warm: '#E8DCC4',
-          dark: '#1A1F2E',
-          elevated: '#232938',
+          dark: '#1C1C1E',
+          elevated: '#2C2C2E',
           DEFAULT: '#FFFBF5',
         },
         gold: {
@@ -53,22 +53,22 @@ const config: Config = {
         input: '#FFFBF5',
         ring: '#C9A961',
         background: '#FFFBF5',
-        foreground: '#0F172A',
+        foreground: '#1A1A1A',
         primary: {
           DEFAULT: '#C9A961',
-          foreground: '#0F172A',
+          foreground: '#1A1A1A',
         },
         secondary: {
           DEFAULT: '#E8DCC4',
-          foreground: '#0F172A',
+          foreground: '#1A1A1A',
         },
         muted: {
           DEFAULT: '#E8DCC4',
-          foreground: '#475569',
+          foreground: '#525252',
         },
         accent: {
           DEFAULT: '#C9A961',
-          foreground: '#0F172A',
+          foreground: '#1A1A1A',
         },
         destructive: {
           DEFAULT: '#8B3A3A',
@@ -76,11 +76,11 @@ const config: Config = {
         },
         card: {
           DEFAULT: '#FEFEFE',
-          foreground: '#0F172A',
+          foreground: '#1A1A1A',
         },
         popover: {
           DEFAULT: '#FEFEFE',
-          foreground: '#0F172A',
+          foreground: '#1A1A1A',
         },
       },
       fontFamily: {
@@ -107,11 +107,11 @@ const config: Config = {
       },
       // Custom shadows (softer, warmer)
       boxShadow: {
-        'soft': '0 2px 8px rgba(15, 23, 42, 0.08)',
-        'medium': '0 4px 16px rgba(15, 23, 42, 0.12)',
-        'large': '0 8px 32px rgba(15, 23, 42, 0.16)',
+        'soft': '0 2px 8px rgba(26, 26, 26, 0.08)',
+        'medium': '0 4px 16px rgba(26, 26, 26, 0.12)',
+        'large': '0 8px 32px rgba(26, 26, 26, 0.16)',
         'gold': '0 0 20px rgba(201, 169, 97, 0.3)',
-        'inner-soft': 'inset 0 2px 4px rgba(15, 23, 42, 0.06)',
+        'inner-soft': 'inset 0 2px 4px rgba(26, 26, 26, 0.06)',
       },
       // Custom animations
       animation: {
@@ -142,7 +142,7 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
-            color: '#0F172A',
+            color: '#1A1A1A',
             lineHeight: '1.8',
             maxWidth: 'none',
             h1: {
@@ -168,7 +168,7 @@ const config: Config = {
               borderLeftColor: '#C9A961',
               borderLeftWidth: '4px',
               fontStyle: 'italic',
-              color: '#475569',
+              color: '#525252',
             },
             code: {
               color: '#8B3A3A',
