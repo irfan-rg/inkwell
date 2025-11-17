@@ -105,23 +105,23 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     <article className="min-h-screen">
       {/* HERO SECTION - with cover image */}
       {post.coverImage ? (
-        <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] overflow-hidden">
-          {/* Cover image */}
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-          
-          {/* Dark overlay - stronger gradient */}
-          <div className="absolute inset-0 bg-linear-to-t from-black via-black/0 to-transparent" />
-          
-          {/* Title overlaid at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-12 lg:p-16">
-            <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+          <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-2xl">
+            {/* Cover image */}
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            />
+            
+            {/* Dark overlay - stronger gradient */}
+            <div className="absolute inset-0 bg-linear-to-t from-black via-black/0 to-transparent" />
+            
+            {/* Title overlaid at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-12 lg:p-16">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-hero font-bold text-white leading-tight tracking-normal">
                 {post.title}
               </h1>
