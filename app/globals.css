@@ -1,0 +1,184 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+/* THIS IS CRITICAL - Fix the dark mode variant */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  --font-sans: var(--font-dm-sans), sans-serif;
+  --font-display: var(--font-playfair), serif;
+  --font-mono: var(--font-mono), monospace;
+  --font-syne: var(--font-syne), sans-serif;
+  
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  /* LIGHT MODE: White BG, Black Text */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+
+  --primary: 0 0% 0%; 
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 0%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+
+  --accent: 0 0% 90%;
+  --accent-foreground: 0 0% 0%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 0 0% 0%;
+  --input: 0 0% 0%;
+  --ring: 0 0% 0%;
+
+  --radius: 0rem; 
+}
+
+.dark {
+  /* DARK MODE: Black BG, White Text */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 60%;
+
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 100%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 100%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  ::selection {
+    @apply bg-foreground/20 text-foreground;
+  }
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display tracking-tight text-foreground font-bold;
+}
+
+
+.font-display {
+  font-family: var(--font-playfair), serif;
+}
+
+.font-sans {
+  font-family: var(--font-inter), sans-serif;
+}
+
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  display: inline-block;
+}
+
+/* ========================================
+   CUSTOM UTILITY CLASSES FOR INVERTED SECTIONS
+   ======================================== */
+
+/* Use this for sections that should be inverted (black in light mode, white in dark mode) */
+.section-inverted {
+  background-color: hsl(var(--foreground));
+  color: hsl(var(--background));
+  border-color: hsl(var(--background));
+}
+
+/* Buttons inside inverted sections */
+.btn-inverted {
+  background-color: transparent;
+  color: hsl(var(--background));
+  border: 2px solid hsl(var(--background));
+}
+
+.btn-inverted:hover {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Text colors for inverted sections */
+.text-inverted {
+  color: hsl(var(--background));
+}
+
+/* Border for inverted sections */
+.border-inverted {
+  border-color: hsl(var(--background));
+}

@@ -1,0 +1,134 @@
+"use client";
+
+import React, { useState } from "react";
+import { api } from "@/lib/trpc";
+import { PostCard } from "@/components/blog/PostCard";
+import { CategoryFilter } from "@/components/blog/CategoryFilter";
+import { SearchBar } from "@/components/blog/SearchBar";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+
+export default function BlogsPage() {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 8; // Even number for 2-col grid
+
+  const { data: postsData, isLoading } = api.post.list.useQuery({
+    published: true,
+    categoryId: selectedCategoryId || undefined,
+    search: searchQuery || undefined,
+    limit: limit + 1,
+    offset: (currentPage - 1) * limit,
+  });
+
+  const hasMore = postsData && postsData.length > limit;
+  const posts = postsData ? postsData.slice(0, limit) : [];
+
+  const handleCategoryChange = (categoryId: string | null) => {
+    setSelectedCategoryId(categoryId);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="min-h-screen bg-background border-t border-border">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-64px)]">
+        
+        {/* Left Sidebar: Navigation & Filters */}
+        <div className="lg:col-span-3 border-r border-border bg-background lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] overflow-y-auto">
+          <div className="p-6 md:p-8 space-y-12">
+            <div>
+              <h1 className="text-4xl font-display font-black tracking-tighter uppercase mb-2">
+                The<br />Archive
+              </h1>
+              <p className="text-xs font-mono text-muted-foreground leading-relaxed border-l-2 border-primary pl-3 mt-4">
+                Curated thoughts, tutorials, and insights on modern development and design.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Search
+                </label>
+                <SearchBar
+                  value={searchQuery}
+                  onChange={(q) => { setSearchQuery(q); setCurrentPage(1); }}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Topics
+                </label>
+                <CategoryFilter
+                  selectedCategoryId={selectedCategoryId}
+                  onCategoryChange={handleCategoryChange}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Content: Feed */}
+        <div className="lg:col-span-9 flex flex-col">
+          {/* Status Bar */}
+          <div className="border-b border-border p-4 flex justify-between items-center bg-muted/5">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+              {isLoading ? "Syncing..." : `Displaying ${posts.length} entries`}
+            </span>
+            <div className="flex gap-2">
+              <div className="h-2 w-2 bg-primary rounded-full animate-pulse" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">Live</span>
+            </div>
+          </div>
+
+          {/* Posts Grid */}
+          <div className="flex-1">
+            {isLoading ? (
+              <div className="h-96 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-foreground" />
+              </div>
+            ) : posts.length > 0 ? (
+              <div className="grid md:grid-cols-2 border-b border-border">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <div className="h-96 flex flex-col items-center justify-center border-b border-border">
+                <p className="font-display text-2xl font-bold text-muted-foreground mb-2">No entries found</p>
+                <p className="text-sm text-muted-foreground">Adjust filters to see more results</p>
+              </div>
+            )}
+          </div>
+
+          {/* Pagination Footer */}
+          <div className="p-8 flex justify-between items-center bg-background">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
+            >
+              <ArrowLeft className="mr-2 h-3 w-3" /> Previous
+            </Button>
+            
+            <span className="font-mono text-xs font-bold">
+              Page {currentPage}
+            </span>
+
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={!hasMore}
+              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
+            >
+              Next <ArrowRight className="ml-2 h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

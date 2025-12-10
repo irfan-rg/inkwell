@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Full background - edge to edge with rounded corners -->
+  <rect x="0" y="0" width="32" height="32" rx="8" fill="#ddcca3" fill-opacity="0.20"/>
+  
+  <!-- Pen Tool Icon (rotated -90 degrees, scaled bigger to fill space) -->
+  <g transform="translate(16, 16) rotate(-90) scale(1.05) translate(-12, -12)">
+    <!-- Lucide PenTool icon paths -->
+    <path d="M12 19l7-7 3 3-7 7-3-3z" fill="none" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" fill="none" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 2l7.586 7.586" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="11" cy="11" r="2" fill="none" stroke="#C9A961" stroke-width="2.5"/>
+  </g>
+</svg>
+
