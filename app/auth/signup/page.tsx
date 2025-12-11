@@ -81,18 +81,18 @@ export default function SignupPage() {
               <div className="group relative">
                 <label 
                   htmlFor="name" 
-                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                 >
-                  Full Name
+                  Pen Name
                 </label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="This name will appear publicly when you publish"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                   disabled={loading}
                 />
               </div>
@@ -100,7 +100,7 @@ export default function SignupPage() {
               <div className="group relative">
                 <label 
                   htmlFor="email" 
-                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                 >
                   Email Address
                 </label>
@@ -111,7 +111,7 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                   disabled={loading}
                 />
               </div>
@@ -120,7 +120,7 @@ export default function SignupPage() {
                 <div className="group relative">
                   <label 
                     htmlFor="password" 
-                    className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                    className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                   >
                     Password
                   </label>
@@ -131,7 +131,7 @@ export default function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                    className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                     disabled={loading}
                   />
                 </div>
@@ -139,7 +139,7 @@ export default function SignupPage() {
                 <div className="group relative">
                   <label 
                     htmlFor="confirmPassword" 
-                    className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                    className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                   >
                     Confirm
                   </label>
@@ -150,7 +150,7 @@ export default function SignupPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                    className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                     disabled={loading}
                   />
                 </div>
@@ -160,7 +160,7 @@ export default function SignupPage() {
             <div className="space-y-6">
               <Button 
                 type="submit" 
-                className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-primary hover:text-white transition-all border border-transparent" 
+                className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-foreground/80 transition-all border border-transparent cursor-pointer" 
                 disabled={loading}
               >
                 {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Inititate Membership"}
@@ -177,17 +177,14 @@ export default function SignupPage() {
       </div>
 
       {/* Right: Visual */}
-      <div className="hidden lg:flex w-1/2 bg-foreground items-center justify-center p-12 relative overflow-hidden order-1 lg:order-2">
-        <div className="absolute inset-0 opacity-20" 
-             style={{ backgroundImage: 'linear-gradient(45deg, #ffffff 25%, transparent 25%, transparent 75%, #ffffff 75%, #ffffff), linear-gradient(45deg, #ffffff 25%, transparent 25%, transparent 75%, #ffffff 75%, #ffffff)', backgroundSize: '40px 40px', backgroundPosition: '0 0, 20px 20px' }}>
-        </div>
-        <div className="relative z-10 text-background w-full max-w-lg text-right">
-          <div className="border-r-4 border-primary pr-8">
-            <h2 className="text-9xl font-display font-black mb-0 leading-none tracking-tighter mix-blend-difference">
+      <div className="hidden lg:flex w-1/2 section-inverted items-center justify-center p-12 relative overflow-hidden order-1 lg:order-2">
+        <div className="relative z-10 w-full max-w-lg text-right">
+          <div className="border-r-4 border-current pr-8">
+            <h2 className="text-9xl text-background! font-display font-black mb-0 leading-none tracking-tighter">
               JOIN<br/>US.
             </h2>
           </div>
-          <p className="mt-12 text-xl font-mono leading-relaxed uppercase tracking-widest opacity-80 border-t border-background/20 pt-8">
+          <p className="mt-12 text-xl font-mono leading-relaxed uppercase tracking-widest opacity-80 border-t border-current/20 pt-8">
             The Collective<br/>Awaits Your Voice
           </p>
         </div>

@@ -233,9 +233,19 @@ export default function DashboardPage() {
 
         <TabsContent value={activeTab} className="mt-0">
           {isLoading ? (
-            <div className="space-y-px bg-border border-t border-border">
+            <div className="border border-border">
               {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-none bg-muted/20" />
+                <div key={i} className="flex items-center justify-between p-6 border-b border-border last:border-b-0">
+                  <div className="flex-1 space-y-3">
+                    <Skeleton className="h-6 w-2/3" />
+                    <Skeleton className="h-4 w-1/4" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 w-20" />
+                    <Skeleton className="h-9 w-9" />
+                    <Skeleton className="h-9 w-9" />
+                  </div>
+                </div>
               ))}
             </div>
           ) : filteredPosts.length === 0 ? (

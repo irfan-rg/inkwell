@@ -50,11 +50,11 @@ export default function LandingPage() {
               </h1>
 
               <div className="flex flex-col items-center mt-2">
-                <p className="font-mono text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 text-center opacity-70">
+                <p className="font-mono text-xs md:text-xs font-bold uppercase tracking-widest text-foreground mb-4 text-center opacity-70">
                   [EST. 2025]
                 </p>
 
-                <p className="font-mono text-xs md:text-sm text-muted-foreground text-center">
+                <p className="font-mono font-semibold text-xs md:text-sm text-muted-foreground text-center">
                   A PLATFORM FOR THOUGHT. DESIGNED FOR CLARITY. BUILT FOR WRITERS
                 </p>
               </div>

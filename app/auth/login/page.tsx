@@ -41,17 +41,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen w-full flex bg-background">
       {/* Left: Brand / Visual */}
-      <div className="hidden lg:flex w-1/2 bg-foreground items-center justify-center p-12 relative overflow-hidden border-r border-border">
-        <div className="absolute inset-0 opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)', backgroundSize: '40px 40px' }}>
-        </div>
-        <div className="relative z-10 text-background w-full max-w-lg">
-          <div className="border-l-4 border-primary pl-8">
-            <h1 className="text-9xl font-display font-black mb-0 leading-none tracking-tighter mix-blend-difference">
+      <div className="hidden lg:flex w-1/2 section-inverted items-center justify-center p-12 relative overflow-hidden border-r border-border">
+        <div className="relative z-10 w-full max-w-lg">
+          <div className="border-l-4 border-current pl-8">
+            <h1 className="text-9xl text-background! font-display font-black mb-0 leading-none tracking-tighter">
               INK<br/>WELL.
             </h1>
           </div>
-          <p className="mt-12 text-xl font-mono leading-relaxed uppercase tracking-widest opacity-80 border-t border-background/20 pt-8">
+          <p className="mt-12 text-xl font-mono leading-relaxed uppercase tracking-widest opacity-80 border-t border-current/20 pt-8">
             Studio Access<br/>
             Authorized Personnel Only
           </p>
@@ -73,7 +70,7 @@ export default function LoginPage() {
               <div className="group relative">
                 <label 
                   htmlFor="email" 
-                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                  className="absolute -top-3 left-0 text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                 >
                   Email Address
                 </label>
@@ -84,7 +81,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                   disabled={loading}
                 />
               </div>
@@ -93,7 +90,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between absolute -top-3 left-0 w-full">
                   <label 
                     htmlFor="password" 
-                    className="text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-primary transition-colors"
+                    className="text-[10px] font-bold font-mono uppercase tracking-widest text-foreground group-focus-within:text-foreground transition-colors"
                   >
                     Password
                   </label>
@@ -105,7 +102,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-primary focus-visible:border-b-2 rounded-none transition-all font-sans"
+                  className="h-12 w-full border-0 border-b border-border bg-transparent px-0 py-2 text-xl font-medium placeholder:text-muted-foreground/20 focus-visible:ring-0 focus-visible:border-foreground focus-visible:border-b-2 rounded-none transition-all font-sans"
                   disabled={loading}
                 />
               </div>
@@ -114,7 +111,7 @@ export default function LoginPage() {
             <div className="space-y-6">
               <Button 
                 type="submit" 
-                className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-primary hover:text-white transition-all border border-transparent" 
+                className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-foreground/80 transition-all border border-transparent cursor-pointer" 
                 disabled={loading}
               >
                 {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Access Studio"}
