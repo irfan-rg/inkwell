@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
-import { Eye, Code2 } from "lucide-react";
+import { EyeIcon, CodeBracketIcon } from "@heroicons/react/24/solid";
 
 interface MarkdownEditorProps {
   value: string;
@@ -26,14 +26,14 @@ export function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorP
               value="write"
               className="rounded-none bg-transparent border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none px-0 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
             >
-              <Code2 className="h-4 w-4" />
+              <CodeBracketIcon className="h-4 w-4" />
               Editor
             </TabsTrigger>
             <TabsTrigger
               value="preview"
               className="rounded-none bg-transparent border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none px-0 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
             >
-              <Eye className="h-4 w-4" />
+              <EyeIcon className="h-4 w-4" />
               Preview
             </TabsTrigger>
           </TabsList>

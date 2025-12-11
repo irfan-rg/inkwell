@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Folder, Loader2, ArrowLeft } from "lucide-react";
+import { PlusIcon, PencilSquareIcon, TrashIcon, FolderIcon, ArrowPathIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { generateSlug } from "@/lib/utils";
 
 interface Category {
@@ -174,7 +174,7 @@ export default function CategoriesPage() {
           className="rounded-none hover:bg-transparent hover:text-primary pl-0 text-muted-foreground font-mono text-xs uppercase tracking-widest"
         >
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Studio
+            <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
           </Link>
         </Button>
       </div>
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={handleCreate} className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-xs transition-colors">
-              <Plus className="mr-2 h-4 w-4" />
+              <PlusIcon className="mr-2 h-4 w-4" />
               New Topic
             </Button>
           </DialogTrigger>
@@ -238,7 +238,7 @@ export default function CategoriesPage() {
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting} className="rounded-none bg-foreground text-background font-bold uppercase tracking-widest text-xs hover:bg-primary hover:text-white">
-                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSubmitting && <ArrowPathIcon className="mr-2 h-4 w-4 animate-spin" />}
                   {editingCategory ? "Update" : "Create"}
                 </Button>
               </div>
@@ -257,7 +257,7 @@ export default function CategoriesPage() {
       ) : !categories || categories.length === 0 ? (
         <div className="border border-dashed border-border p-16 flex flex-col items-center justify-center text-center">
           <EmptyState
-            icon={Folder}
+            icon={FolderIcon}
             title="No topics found"
             description="Create your first category to start organizing."
             action={{
@@ -299,7 +299,7 @@ export default function CategoriesPage() {
                   onClick={() => handleEdit(category)}
                   className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background"
                 >
-                  <Edit2 className="h-4 w-4" />
+                  <PencilSquareIcon className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -307,7 +307,7 @@ export default function CategoriesPage() {
                   onClick={() => setDeleteConfirmId(category.id)}
                   className="h-9 w-9 rounded-none hover:bg-destructive hover:text-destructive-foreground"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <TrashIcon className="h-4 w-4" />
                 </Button>
               </div>
             </div>

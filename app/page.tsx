@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/trpc";
 import { createClient } from "@/lib/supabase/client";
-import { ArrowRight, ArrowUpRight , Quote} from "lucide-react";
+import { ArrowRightIcon, ArrowUpRightIcon, ChatBubbleLeftRightIcon} from "@heroicons/react/24/solid";
 import { PostCard } from "@/components/blog/PostCard";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
 import { Navbar } from "@/components/layout/Navbar";
@@ -81,7 +81,7 @@ export default function LandingPage() {
                 className="mt-4 h-12 w-auto lg:w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto"
               >
                 <Link href={startWritingHref} className="flex items-center">
-                  Initialize <ArrowRight className="ml-2 h-4 w-4" />
+                  Initialize <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
@@ -164,7 +164,7 @@ export default function LandingPage() {
             </h2>
             <Link href="/blogs" className="group flex items-center text-base font-bold uppercase tracking-widest hover:text-foreground/60 transition-colors mt-6 md:mt-0 mb-2">
               View Complete Archive
-              <ArrowUpRight className="ml-2 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+              <ArrowUpRightIcon className="ml-2 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-0.5" />
             </Link>
           </div>
 
@@ -207,7 +207,14 @@ export default function LandingPage() {
         
         {/* Right - Normal */}
         <div className="p-16 lg:p-32 bg-background text-foreground flex flex-col justify-center">
-          <Quote className="text-6xl mb-8 text-foreground" style={{ transform: "scaleX(-1)" }} />
+
+          <div className="mb-8 text-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-quote-icon lucide-quote" style={{ transform: "scaleX(-1)" }}>
+              <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>
+              <path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>
+            </svg>
+          </div>
+          
           <p className="text-2xl md:text-3xl font-sans leading-relaxed mb-8 text-foreground">
             Design is the silent ambassador of your brand. We provide the canvas; you provide the art. 
           </p>

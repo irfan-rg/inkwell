@@ -11,7 +11,7 @@ import { ImageUpload } from "@/components/blog/ImageUpload";
 import { MarkdownEditor } from "@/components/blog/MarkdownEditor";
 import { generateSlug } from "@/lib/utils";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2, ChevronDown } from "lucide-react";
+import { ArrowLeftIcon, ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import {
   Collapsible,
   CollapsibleContent,
@@ -154,7 +154,7 @@ export function PostForm({ postId, initialData }: PostFormProps) {
           disabled={isLoading}
           className="rounded-none hover:bg-transparent hover:text-foreground/60 pl-0 text-muted-foreground font-mono text-xs uppercase tracking-widest"
         >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Studio
+          <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
         </Button>
         <div className="flex gap-4 items-center">
           <MarkdownGuide />
@@ -173,7 +173,7 @@ export function PostForm({ postId, initialData }: PostFormProps) {
             className="rounded-none bg-foreground text-background hover:bg-foreground/90 hover:text-background font-bold uppercase tracking-widest text-xs h-10 px-6"
           >
             {isLoading && actionType === "publish" ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <ArrowPathIcon className="h-4 w-4 animate-spin" />
             ) : (
               "Publish"
             )}
@@ -203,7 +203,7 @@ export function PostForm({ postId, initialData }: PostFormProps) {
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
                 Metadata & Settings
               </span>
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMetaOpen ? 'rotate-180' : ''}`} />
+              <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${isMetaOpen ? 'rotate-180' : ''}`} />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="pb-8 space-y-8 animate-slide-down">
@@ -238,7 +238,7 @@ export function PostForm({ postId, initialData }: PostFormProps) {
                 <div className="space-y-4">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Categories</label>
                   {categoriesLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {categories?.map((cat) => (

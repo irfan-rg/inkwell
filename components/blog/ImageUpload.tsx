@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/lib/supabase/client";
-import { X, Image as ImageIcon, Loader2, Link as LinkIcon } from "lucide-react";
+import { XMarkIcon, PhotoIcon, ArrowPathIcon, LinkIcon } from "@heroicons/react/24/solid";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
@@ -244,14 +244,14 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
               onClick={handleRemove}
               disabled={disabled || uploading || isValidatingUrl}
             >
-              <X className="mr-2 h-4 w-4" />
+              <XMarkIcon className="mr-2 h-4 w-4" />
               Remove Image
             </Button>
           </div>
 
           {(uploading || isValidatingUrl) && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-              <Loader2 className="h-8 w-8 animate-spin text-white" />
+              <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
             </div>
           )}
         </div>
@@ -263,7 +263,7 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
                 value="upload"
                 className="flex items-center gap-2 data-[state=active]:bg-foreground data-[state=active]:text-background dark:data-[state=active]:bg-foreground dark:data-[state=active]:text-background"
               >
-                <ImageIcon className="h-4 w-4" />
+                <PhotoIcon className="h-4 w-4" />
                 Upload
               </TabsTrigger>
               <TabsTrigger
@@ -298,12 +298,12 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
             >
               {uploading ? (
                 <>
-                  <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
+                  <ArrowPathIcon className="h-10 w-10 animate-spin text-muted-foreground" />
                   <p className="mt-2 text-sm text-muted-foreground">Uploading...</p>
                 </>
               ) : (
                 <>
-                  <ImageIcon className="h-10 w-10 text-muted-foreground" />
+                  <PhotoIcon className="h-10 w-10 text-muted-foreground" />
                   <p className="mt-2 text-sm font-medium">Click to upload or drag and drop</p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     JPEG, PNG, or WebP (max 5MB)
@@ -337,7 +337,7 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
                 >
                   {isValidatingUrl ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <ArrowPathIcon className="mr-2 h-4 w-4 animate-spin" />
                       Validating...
                     </>
                   ) : (

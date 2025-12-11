@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { api } from "@/lib/trpc";
 import { PostCard } from "@/components/blog/PostCard";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
-import { PenTool, BookOpen, Users, ArrowDown, ArrowRight, PencilLine } from "lucide-react";
+import { PencilIcon, BookOpenIcon, UsersIcon, ArrowDownIcon, ArrowRightIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/lib/supabase/client";
 import { Footer } from "@/components/layout/Footer";
 
@@ -76,13 +76,13 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-10 px-4">
             <Button size="lg" asChild className="w-full sm:w-auto text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
               <Link href={startWritingHref}>
-                <PenTool className="mr-2 h-5 w-5" />
+                <PencilIcon className="mr-2 h-5 w-5" />
                 Start Writing
               </Link>
             </Button>
             <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto text-base font-semibold px-8">
               <Link href="/blogs">
-                <BookOpen className="mr-2 h-5 w-5" />
+                <BookOpenIcon className="mr-2 h-5 w-5" />
                 Explore Stories
               </Link>
             </Button>
@@ -91,7 +91,7 @@ export default function LandingPage() {
           {/* Scroll indicator - hidden on very small screens */}
           <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-bounce">
             <p className="text-sm text-primary">Scroll to explore</p>
-            <ArrowDown className="h-5 w-5 text-primary" />
+            <ArrowDownIcon className="h-5 w-5 text-primary" />
           </div>
         </div>
       </section>
@@ -109,7 +109,7 @@ export default function LandingPage() {
             {/* Feature 1 */}
             <Card className="p-6 sm:p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="mb-4 sm:mb-6">
-                <PencilLine className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                <PencilSquareIcon className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-display font-semibold mb-2 sm:mb-3">
                 Elegant Writing Experience
@@ -122,7 +122,7 @@ export default function LandingPage() {
             {/* Feature 2 */}
             <Card className="p-6 sm:p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="mb-4 sm:mb-6">
-                <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                <BookOpenIcon className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-display font-semibold mb-2 sm:mb-3">
                 Beautiful Design
@@ -135,7 +135,7 @@ export default function LandingPage() {
             {/* Feature 3 */}
             <Card className="p-6 sm:p-8 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="mb-4 sm:mb-6">
-                <Users className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                <UsersIcon className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-display font-semibold mb-2 sm:mb-3">
                 Share & Connect
@@ -172,14 +172,14 @@ export default function LandingPage() {
                 <Button size="lg" asChild variant="outline" className="w-full sm:w-auto">
                   <Link href="/blogs">
                     View All Posts
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRightIcon className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </div>
             </>
           ) : (
             <div className="text-center py-12">
-              <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <BookOpenIcon className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <p className="text-base sm:text-lg text-muted-foreground px-4">
                 Be the first to share your story! Sign up and start writing today.
               </p>
@@ -204,7 +204,7 @@ export default function LandingPage() {
           {/* CTA Button */}
           <Button size="lg" asChild className="w-full sm:w-auto text-base font-semibold px-8 shadow-md hover:shadow-lg transition-all">
             <Link href="/auth/signup">
-              <PenTool className="mr-2 h-5 w-5" />
+              <PencilIcon className="mr-2 h-5 w-5" />
               Get Started
             </Link>
           </Button>

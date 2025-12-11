@@ -6,7 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { ArrowPathIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { toast } from "sonner";
 
 export default function LoginPage() {
@@ -60,7 +60,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md space-y-16">
           <div className="space-y-4">
             <Link href="/" className="inline-flex items-center text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors group">
-              <ArrowLeft className="mr-2 h-3 w-3 group-hover:-translate-x-1 transition-transform" /> Return Home
+              <ArrowLeftIcon className="mr-2 h-3 w-3 group-hover:-translate-x-1 transition-transform" /> Return Home
             </Link>
             <h2 className="text-5xl font-display font-black tracking-tighter uppercase">Identifier</h2>
           </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between absolute -top-3 left-0 w-full">
                   <label 
                     htmlFor="password" 
-                    className="text-[10px] font-bold font-mono uppercase tracking-widest text-foreground group-focus-within:text-foreground transition-colors"
+                    className="text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors"
                   >
                     Password
                   </label>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-foreground/80 transition-all border border-transparent cursor-pointer" 
                 disabled={loading}
               >
-                {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Access Studio"}
+                {loading ? <ArrowPathIcon className="mr-2 h-5 w-5 animate-spin" /> : "Access Studio"}
               </Button>
               
               <div className="flex justify-center">

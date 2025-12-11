@@ -1,4 +1,4 @@
-import { AlertCircle } from "lucide-react";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +15,7 @@ export function ErrorMessage({
 }: ErrorMessageProps) {
   return (
     <Alert variant="destructive" className="my-4">
-      <AlertCircle className="h-4 w-4" />
+      <ExclamationCircleIcon className="h-4 w-4" />
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription className="mt-2">
         <p className="mb-3">{message}</p>

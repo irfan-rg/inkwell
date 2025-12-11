@@ -6,7 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AlertCircle, Loader2, ArrowLeft } from "lucide-react";
+import { ExclamationCircleIcon, ArrowPathIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { toast } from "sonner";
 
 export default function SignupPage() {
@@ -64,7 +64,7 @@ export default function SignupPage() {
         <div className="w-full max-w-md space-y-16">
           <div className="space-y-4">
             <Link href="/" className="inline-flex items-center text-[10px] font-bold font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors group">
-              <ArrowLeft className="mr-2 h-3 w-3 group-hover:-translate-x-1 transition-transform" /> Return Home
+              <ArrowLeftIcon className="mr-2 h-3 w-3 group-hover:-translate-x-1 transition-transform" /> Return Home
             </Link>
             <h2 className="text-5xl font-display font-black tracking-tighter uppercase">Application</h2>
           </div>
@@ -72,7 +72,7 @@ export default function SignupPage() {
           <form onSubmit={handleSignup} className="space-y-12">
             {error && (
               <div className="flex items-center gap-3 rounded-none bg-destructive/5 p-4 text-xs font-mono uppercase tracking-wide text-destructive border-l-2 border-destructive">
-                <AlertCircle className="h-4 w-4" />
+                <ExclamationCircleIcon className="h-4 w-4" />
                 {error}
               </div>
             )}
@@ -163,7 +163,7 @@ export default function SignupPage() {
                 className="w-full h-16 rounded-none text-base uppercase tracking-widest font-bold bg-foreground text-background hover:bg-foreground/80 transition-all border border-transparent cursor-pointer" 
                 disabled={loading}
               >
-                {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Inititate Membership"}
+                {loading ? <ArrowPathIcon className="mr-2 h-5 w-5 animate-spin" /> : "Inititate Membership"}
               </Button>
               
               <div className="flex justify-center">

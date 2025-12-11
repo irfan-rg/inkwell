@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogOut } from "lucide-react";
+import { Bars3Icon, XMarkIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/lib/supabase/client";
 
 interface NavLinkProps {
@@ -132,7 +132,7 @@ export function Navbar() {
                   onClick={handleLogout}
                   className="cursor-pointer font-bold uppercase text-xs tracking-wider py-3 p-4 rounded-none focus:bg-destructive focus:text-destructive-foreground"
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4" />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -159,7 +159,7 @@ export function Navbar() {
             className="md:hidden flex items-center justify-center h-9 w-9 hover:bg-muted/50 rounded transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMobileMenuOpen ? <XMarkIcon className="h-5 w-5" /> : <Bars3Icon className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -209,7 +209,7 @@ export function Navbar() {
                 onClick={handleLogout}
                 className="px-4 py-3 text-sm font-bold uppercase tracking-wider bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded transition-colors flex items-center justify-center gap-2"
               >
-                <LogOut className="h-4 w-4" />
+                <ArrowRightOnRectangleIcon className="h-4 w-4" />
                 Sign Out
               </button>
             ) : (

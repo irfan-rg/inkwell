@@ -1,8 +1,8 @@
-import { LucideIcon, FileText } from "lucide-react";
+import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 
 interface EmptyStateProps {
-  icon?: LucideIcon;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
   action?: {
@@ -12,7 +12,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  icon: Icon = FileText,
+  icon: Icon = DocumentTextIcon,
   title,
   description,
   action,

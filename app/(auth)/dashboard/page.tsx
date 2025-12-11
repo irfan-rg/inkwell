@@ -20,7 +20,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Plus, Edit2, Trash2, Archive, ArrowUpRight, CheckCircle2, Circle, Folder } from "lucide-react";
+import { PlusIcon, PencilSquareIcon, TrashIcon, ArchiveBoxIcon, CheckCircleIcon, CircleStackIcon, FolderIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -169,7 +169,7 @@ export default function DashboardPage() {
             Studio
           </h1>
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Logged in as <span className="text-primary font-bold">{userName}</span>
+            Logged in as <span className="text-foreground font-bold">{userName}</span>
           </p>
         </div>
         
@@ -180,16 +180,16 @@ export default function DashboardPage() {
             className="rounded-none h-12 px-6 border-foreground text-foreground hover:bg-foreground hover:text-background font-bold uppercase tracking-widest text-xs transition-colors"
           >
             <Link href="/dashboard/categories">
-              <Folder className="mr-2 h-4 w-4" /> Topics
+              <FolderIcon className="mr-2 h-4 w-4" /> Topics
             </Link>
           </Button>
           
-          <Button 
-            asChild 
-            className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-xs transition-colors"
+          <Button
+            asChild
+            className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-foreground/80 font-bold uppercase tracking-widest text-xs transition-colors"
           >
             <Link href="/dashboard/new">
-              <Plus className="mr-2 h-4 w-4" /> New Entry
+              <PlusIcon className="mr-2 h-4 w-4" /> New Entry
             </Link>
           </Button>
         </div>
@@ -203,7 +203,7 @@ export default function DashboardPage() {
           { label: "Drafts", value: stats.draftPosts },
           { label: "Archived", value: stats.archivedPosts },
         ].map((stat, i) => (
-          <div key={i} className={`p-6 border-border ${i !== 3 ? 'border-r' : ''} ${i >= 2 ? 'border-t md:border-t-0' : ''}`}>
+          <div key={i} className={`p-6 border-border ${i === 0 ? 'border-r' : ''} ${i === 1 ? 'md:border-r' : ''} ${i === 2 ? 'border-r md:border-r' : ''} ${i >= 2 ? 'border-t md:border-t-0' : ''}`}>
             <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground mb-2">
               {stat.label}
             </span>
@@ -264,14 +264,15 @@ export default function DashboardPage() {
               {filteredPosts.map((post) => (
                 <div 
                   key={post.id} 
-                  className="group flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-6 border-b border-border hover:bg-muted/30 transition-colors"
+                  className="group flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-6 border-b border-border hover:bg-muted/30 transition-colors cursor-pointer"
+                  onClick={() => router.push(`/blogs/${post.slug}`)}
                 >
                   {/* Status Indicator */}
                   <div className="hidden md:flex items-center justify-center w-8">
                     {post.published ? (
-                      <CheckCircle2 className="h-5 w-5 text-primary" />
+                      <CheckCircleIcon className="h-5 w-5 text-primary" />
                     ) : (
-                      <Circle className="h-5 w-5 text-muted-foreground" />
+                      <MinusCircleIcon className="h-5 w-5 text-muted-foreground" />
                     )}
                   </div>
 
@@ -296,16 +297,10 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                     <Button size="icon" variant="ghost" asChild className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background">
                       <Link href={`/dashboard/edit/${post.id}`}>
-                        <Edit2 className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    
-                    <Button size="icon" variant="ghost" asChild className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background">
-                      <Link href={`/blogs/${post.slug}`}>
-                        <ArrowUpRight className="h-4 w-4" />
+                        <PencilSquareIcon className="h-5 w-5" />
                       </Link>
                     </Button>
 
@@ -315,20 +310,20 @@ export default function DashboardPage() {
                       onClick={() => handleToggleArchive(post.id, post.archived)}
                       className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background"
                     >
-                      <Archive className="h-4 w-4" />
+                      <ArchiveBoxIcon className="h-5 w-5" />
                     </Button>
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button size="icon" variant="ghost" className="h-9 w-9 rounded-none hover:bg-destructive hover:text-destructive-foreground">
-                          <Trash2 className="h-4 w-4" />
+                          <TrashIcon className="h-5 w-5" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="rounded-none border-2 border-foreground p-8 max-w-sm">
                         <AlertDialogHeader>
-                          <AlertDialogTitle className="font-display text-2xl font-bold uppercase">Confirm Deletion</AlertDialogTitle>
+                          <AlertDialogTitle className="font-display text-2xl font-bold uppercase mb-4">Confirm Deletion</AlertDialogTitle>
                           <AlertDialogDescription className="font-mono text-xs">
-                            This action is permanent and cannot be undone.
+                            This action is permanent and cannot be Undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="mt-6">

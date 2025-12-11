@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
 
 interface LoadingSpinnerProps {
@@ -19,7 +19,7 @@ export function LoadingSpinner({
   centered = false,
 }: LoadingSpinnerProps) {
   const spinner = (
-    <Loader2
+    <ArrowPathIcon
       className={cn("animate-spin text-primary", sizeMap[size], className)}
     />
   );

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { api } from "@/lib/trpc";
 import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
 import { PostCard } from "@/components/blog/PostCard";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { format } from "date-fns";
 import { calculateReadingTime } from "@/lib/utils";
 
@@ -66,7 +66,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               href="/blogs" 
               className="inline-flex items-center gap-2 text-xs font-bold font-mono uppercase tracking-widest hover:text-foreground/60 transition-colors"
             >
-              <ArrowLeft className="h-3 w-3" /> Back
+              <ArrowLeftIcon className="h-3 w-3" /> Back
             </Link>
           </div>
           <div className="lg:col-span-10 p-8 lg:p-12">

@@ -7,14 +7,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CircleHelp } from "lucide-react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 
 export function MarkdownGuide() {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground">
-          <CircleHelp className="h-4 w-4" />
+          <QuestionMarkCircleIcon className="h-4 w-4" />
           Markdown Guide
         </Button>
       </DialogTrigger>

@@ -3,7 +3,7 @@
 import { PostCard } from "./PostCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
-import { FileText, Search } from "lucide-react";
+import { DocumentTextIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 interface PostListProps {
   posts: Array<{
@@ -49,7 +49,7 @@ export function PostList({
   if (posts.length === 0) {
     return (
       <EmptyState
-        icon={emptyIcon === "search" ? Search : FileText}
+        icon={emptyIcon === "search" ? MagnifyingGlassIcon : DocumentTextIcon}
         title={emptyMessage}
         description={emptyDescription}
       />

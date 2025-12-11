@@ -3,7 +3,7 @@
 import { api } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { CheckIcon } from "@heroicons/react/24/solid";
 
 interface CategoryFilterProps {
   selectedCategoryId: string | null;
@@ -46,7 +46,7 @@ export function CategoryFilter({
         <span className="text-xs font-bold font-mono uppercase tracking-widest">
           [00] All Stories
         </span>
-        {selectedCategoryId === null && <Check className="h-3 w-3" />}
+        {selectedCategoryId === null && <CheckIcon className="h-3 w-3" />}
       </button>
 
       {categories.map((category, index) => {
@@ -65,7 +65,7 @@ export function CategoryFilter({
             <span className="text-xs font-bold font-mono uppercase tracking-widest truncate max-w-[80%]">
               [{num}] {category.name}
             </span>
-            {isSelected && <Check className="h-3 w-3" />}
+            {isSelected && <CheckIcon className="h-3 w-3" />}
           </button>
         );
       })}

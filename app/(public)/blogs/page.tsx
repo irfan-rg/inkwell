@@ -7,7 +7,7 @@ import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { SearchBar } from "@/components/blog/SearchBar";
 import { Button } from "@/components/ui/button";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
 export default function BlogsPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
@@ -129,7 +129,7 @@ export default function BlogsPage() {
               disabled={currentPage === 1}
               className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
             >
-              <ArrowLeft className="mr-2 h-3 w-3" /> Previous
+              <ArrowLeftIcon className="mr-2 h-3 w-3" /> Previous
             </Button>
             
             <span className="font-mono text-xs font-bold">
@@ -142,7 +142,7 @@ export default function BlogsPage() {
               disabled={!hasMore}
               className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
             >
-              Next <ArrowRight className="ml-2 h-3 w-3" />
+              Next <ArrowRightIcon className="ml-2 h-3 w-3" />
             </Button>
           </div>
         </div>

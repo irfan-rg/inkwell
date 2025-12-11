@@ -25,7 +25,7 @@
 - **React Query** - Server State via tRPC Integration
 - **Zustand** - Client State (Theme, UI)
 - **React Markdown** - Markdown Rendering with Syntax Highlighting
-- **Lucide React** - Icon library
+- **Heroicons** - Icon library (solid variant)
 
 ### Backend & Database
 - **tRPC** - End-to-end type-safe APIs

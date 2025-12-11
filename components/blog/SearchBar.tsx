@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 interface SearchBarProps {
   value: string;
@@ -30,7 +30,7 @@ export function SearchBar({
 
   return (
     <div className="relative w-full group">
-      <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+      <MagnifyingGlassIcon className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
       <Input
         type="text"
         value={inputValue}
@@ -46,7 +46,7 @@ export function SearchBar({
           }}
           className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
         >
-          <X className="h-3 w-3" />
+          <XMarkIcon className="h-3 w-3" />
           <span className="sr-only">Clear</span>
         </button>
       )}

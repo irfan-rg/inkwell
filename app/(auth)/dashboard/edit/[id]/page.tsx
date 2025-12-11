@@ -5,7 +5,7 @@ import { api } from "@/lib/trpc";
 import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { PostCategory } from "@/server/db/schema";
 
 /**
@@ -52,7 +52,7 @@ export default function EditPostPage() {
       <div className="mx-auto max-w-5xl">
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <AlertCircle className="h-12 w-12 text-destructive" />
+            <ExclamationCircleIcon className="h-12 w-12 text-destructive" />
             <h3 className="mt-4 text-lg font-semibold">Post Not Found</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               {error?.message || "The post you're looking for doesn't exist or you don't have permission to edit it."}
