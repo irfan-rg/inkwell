@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/server/*": ["./drizzle/server/*"]
+      "@/server/*": ["./server/*"]
     }
   },
   "include": [

@@ -9,8 +9,8 @@
 
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { type NextRequest } from 'next/server';
-import { appRouter } from '@/drizzle/server/api/root';
-import { createTRPCContext } from '@/drizzle/server/api/trpc';
+import { appRouter } from '@/server/api/root';
+import { createTRPCContext } from '@/server/api/trpc';
 
 /**
  * Main request handler for tRPC procedures

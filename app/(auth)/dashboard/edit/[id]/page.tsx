@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
-import { PostCategory } from "@/drizzle/server/db/schema";
+import { PostCategory } from "@/server/db/schema";
 
 /**
  * Edit Post Page

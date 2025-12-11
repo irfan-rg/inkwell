@@ -6,13 +6,14 @@ import { PostCard } from "@/components/blog/PostCard";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { SearchBar } from "@/components/blog/SearchBar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function BlogsPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 8; // Even number for 2-col grid
+  const limit = 6; // Even number for 2-col grid
 
   const { data: postsData, isLoading } = api.post.list.useQuery({
     published: true,
@@ -22,13 +23,29 @@ export default function BlogsPage() {
     offset: (currentPage - 1) * limit,
   });
 
+  const { data: totalCount } = api.post.count.useQuery({
+    published: true,
+    categoryId: selectedCategoryId || undefined,
+    search: searchQuery || undefined,
+  });
+
   const hasMore = postsData && postsData.length > limit;
   const posts = postsData ? postsData.slice(0, limit) : [];
+
+  // Scroll to top when page changes
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
 
   const handleCategoryChange = (categoryId: string | null) => {
     setSelectedCategoryId(categoryId);
     setCurrentPage(1);
   };
+
+  const handleSearchChange = React.useCallback((q: string) => {
+    setSearchQuery(q);
+    setCurrentPage(1);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background border-t border-border">
@@ -53,7 +70,7 @@ export default function BlogsPage() {
                 </label>
                 <SearchBar
                   value={searchQuery}
-                  onChange={(q) => { setSearchQuery(q); setCurrentPage(1); }}
+                  onChange={handleSearchChange}
                 />
               </div>
 
@@ -78,16 +95,17 @@ export default function BlogsPage() {
               {isLoading ? "Syncing..." : `Displaying ${posts.length} entries`}
             </span>
             <div className="flex gap-2">
-              <div className="h-2 w-2 bg-primary rounded-full animate-pulse" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">Live</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-foreground">
+                Total {totalCount || 0} stories
+              </span>
             </div>
           </div>
 
           {/* Posts Grid */}
           <div className="flex-1">
             {isLoading ? (
-              <div className="h-96 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-foreground" />
+              <div className="grid md:grid-cols-2 border-b border-border">
+                <PostListSkeleton count={6} />
               </div>
             ) : posts.length > 0 ? (
               <div className="grid md:grid-cols-2 border-b border-border">

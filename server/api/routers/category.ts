@@ -9,8 +9,8 @@ import { z } from 'zod';
 import { eq, sql } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 import { publicProcedure, protectedProcedure, router } from '../trpc';
-import { db } from '@/drizzle/server/db';
-import { categories, postCategories } from '@/drizzle/server/db/schema';
+import { db } from '@/server/db';
+import { categories, postCategories } from '@/server/db/schema';
 import { generateSlug } from '@/lib/utils';
 
 /**

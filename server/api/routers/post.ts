@@ -9,9 +9,9 @@
 
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { eq, and, desc, or, ilike } from 'drizzle-orm';
+import { eq, and, desc, or, ilike, sql, inArray } from 'drizzle-orm';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
-import { posts, postCategories } from '@/drizzle/server/db/schema';
+import { posts, postCategories } from '@/server/db/schema';
 import { generateSlug } from '@/lib/utils';
 
 // ============================================
@@ -358,6 +358,55 @@ export const postRouter = router({
     }),
 
   /**
+   * Get total count of posts with filters
+   */
+  count: publicProcedure
+    .input(listPostsSchema.omit({ limit: true, offset: true }))
+    .query(async ({ ctx, input }) => {
+      const { db } = ctx;
+      const { published, categoryId, authorId, search } = input;
+
+      const conditions = [];
+
+      if (published !== undefined) {
+        conditions.push(eq(posts.published, published));
+      }
+
+      if (authorId) {
+        conditions.push(eq(posts.authorId, authorId));
+      }
+
+      conditions.push(eq(posts.archived, false));
+
+      if (search) {
+        conditions.push(
+          or(
+            ilike(posts.title, `%${search}%`),
+            ilike(posts.content, `%${search}%`),
+            ilike(posts.excerpt, `%${search}%`)
+          )
+        );
+      }
+
+      if (categoryId) {
+        const result = await db
+          .select({ count: sql<number>`count(distinct ${posts.id})` })
+          .from(posts)
+          .innerJoin(postCategories, eq(posts.id, postCategories.postId))
+          .where(and(...conditions, eq(postCategories.categoryId, categoryId)));
+        
+        return Number(result[0]?.count || 0);
+      } else {
+        const result = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(posts)
+          .where(and(...conditions));
+        
+        return Number(result[0]?.count || 0);
+      }
+    }),
+
+  /**
    * List posts with filtering and pagination
    * 
    * Public procedure that retrieves a list of posts with optional filters.
@@ -408,12 +457,27 @@ export const postRouter = router({
         );
       }
 
-      // If filtering by category, we need to join through postCategories
-      // Fetch one extra to check if there are more posts
+      // If filtering by category, we need to filter IDs first to ensure pagination works correctly
+      if (categoryId) {
+        const matchingCategories = await db
+          .select({ postId: postCategories.postId })
+          .from(postCategories)
+          .where(eq(postCategories.categoryId, categoryId));
+        
+        const matchingIds = matchingCategories.map(m => m.postId);
+        
+        if (matchingIds.length === 0) {
+          return [];
+        }
+        
+        conditions.push(inArray(posts.id, matchingIds));
+      }
+
+      // Fetch exactly what is requested
       const query = db.query.posts.findMany({
         where: conditions.length > 0 ? and(...conditions) : undefined,
-        orderBy: [desc(posts.createdAt)],
-        limit: limit + 1, // Fetch one extra to check for more
+        orderBy: [desc(posts.createdAt), desc(posts.id)],
+        limit: limit,
         offset,
         with: {
           postCategories: {
@@ -424,17 +488,9 @@ export const postRouter = router({
         },
       });
 
-      let allPosts = await query;
+      const allPosts = await query;
 
-      // Filter by category if specified
-      if (categoryId) {
-        allPosts = allPosts.filter((post) =>
-          post.postCategories.some((pc) => pc.categoryId === categoryId)
-        );
-      }
-
-      // Return only the requested limit (slice off the extra one used for pagination check)
-      return allPosts.slice(0, limit);
+      return allPosts;
     }),
 
   /**

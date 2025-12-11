@@ -14,7 +14,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { createClient } from '@/lib/supabase/server';
-import { db } from '@/drizzle/server/db';
+import { db } from '@/server/db';
 import type { Session, User } from '@supabase/supabase-js';
 
 /**
