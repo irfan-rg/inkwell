@@ -10,6 +10,7 @@ import { PostCard } from "@/components/blog/PostCard";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { format } from "date-fns";
 import { calculateReadingTime } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -61,7 +62,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="border-b border-border">
         {/* Top Row: Navigation & Title */}
         <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-border">
-          <div className="lg:col-span-2 border-r border-border p-6 flex items-center justify-center lg:justify-start">
+          <div className="lg:col-span-1 border-r border-border p-6 flex items-center justify-center">
             <Link 
               href="/blogs" 
               className="inline-flex items-center gap-2 text-xs font-bold font-mono uppercase tracking-widest hover:text-foreground/60 transition-colors"
@@ -69,7 +70,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               <ArrowLeftIcon className="h-3 w-3" /> Back
             </Link>
           </div>
-          <div className="lg:col-span-10 p-8 lg:p-12">
+          <div className="lg:col-span-11 p-8 lg:p-12">
             <h1 
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tighter uppercase leading-[0.9]"
             >
@@ -99,16 +100,95 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </div>
 
-      {/* 2. FEATURED IMAGE (Full Width) */}
+      {/* 2. ASYMMETRIC HERO SPLIT */}
       {post.coverImage && (
-        <div className="w-[50vw] h-[50vh] md:h-[60vh] relative border-b border-border mx-auto">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-border">
+          {/* Image - 7 columns */}
+          <div className="lg:col-span-7 h-[50vh] md:h-[60vh] lg:h-[80vh] relative border-r border-border">
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          
+          {/* Excerpt Panel - 5 columns */}
+          <div className="lg:col-span-5 bg-foreground text-background p-8 lg:p-12 flex flex-col justify-center">
+            <div className="space-y-6">
+              <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">
+                {categoryName}
+              </div>
+              <blockquote className="font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-tight uppercase tracking-tight">
+                {post.excerpt || post.content.substring(0, 200).replace(/[#*`]/g, '') + '...'}
+              </blockquote>
+              <div className="h-px w-16 bg-background/20" />
+              
+              {/* Share Buttons */}
+              <div className="pt-4">
+                <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60 mb-3 text-right">
+                  Share
+                </div>
+                <div className="flex gap-4 justify-end">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(post.content);
+                      toast.success("Content copied to clipboard!");
+                    }}
+                    className="group flex items-center gap-2 text-xs font-mono uppercase tracking-wider hover:opacity-60 transition-opacity"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const url = typeof window !== 'undefined' ? window.location.href : '';
+                      const text = `${post.title}%0a%0a${url}`;
+                      window.open(`https://wa.me/?text=${text}`, '_blank');
+                      toast.success("Opening WhatsApp...");
+                    }}
+                    className="group flex items-center gap-2 text-xs font-mono uppercase tracking-wider hover:opacity-60 transition-opacity"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    WA
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const url = typeof window !== 'undefined' ? window.location.href : '';
+                      if (navigator.share) {
+                        navigator.share({
+                          title: post.title,
+                          text: post.excerpt || post.content.substring(0, 200).replace(/[#*`]/g, ''),
+                          url: url
+                        }).then(() => {
+                          toast.success("Shared successfully!");
+                        }).catch((error) => {
+                          if (error.name !== 'AbortError') {
+                            navigator.clipboard.writeText(url);
+                            toast.success("Link copied to clipboard!");
+                          }
+                        });
+                      } else {
+                        navigator.clipboard.writeText(url);
+                        toast.success("Link copied to clipboard!");
+                      }
+                    }}
+                    className="group flex items-center gap-2 text-xs font-mono uppercase tracking-wider hover:opacity-60 transition-opacity"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                    Share
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

@@ -81,7 +81,7 @@
 
 .dark {
   /* DARK MODE: Black BG, White Text */
-  --background: 0 0% 0%;
+  --background: 0 0% 4%;
   --foreground: 0 0% 100%;
 
   --card: 0 0% 5%;
