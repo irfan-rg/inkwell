@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { PencilIcon, ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -33,9 +34,12 @@ export function Footer() {
         {/* Brand Column */}
         <div className="md:col-span-1 p-6 md:p-8 flex flex-col justify-between h-full">
           <div>
-            {/* <PencilIcon className="h-8 w-8 mb-4 text-foreground" /> */}
             <span className="block font-mono text-xs uppercase tracking-widest text-muted-foreground mb-12">Platform</span>
-            <h2 className="font-display text-4xl font-black tracking-tighter uppercase">Inkwell.</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <Image src="/favicon.svg" alt="Inkwell" width={32} height={32} onClick={() => window.location.href = "/"} className="cursor-pointer mt-1"/>
+              <Link href="/" className="font-display font-bold text-4xl tracking-tighter uppercase mb-0">InkWell.</Link>
+            </div>
+            
           </div>
           <p className="text-xs font-mono text-muted-foreground mt-auto">
             &copy; 2025 Inkwell Inc.<br/>

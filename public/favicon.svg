@@ -1,14 +1,15 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Full background - edge to edge with rounded corners -->
-  <rect x="0" y="0" width="32" height="32" rx="8" fill="#ddcca3" fill-opacity="0.20"/>
-  
-  <!-- Pen Tool Icon (rotated -90 degrees, scaled bigger to fill space) -->
-  <g transform="translate(16, 16) rotate(-90) scale(1.05) translate(-12, -12)">
-    <!-- Lucide PenTool icon paths -->
-    <path d="M12 19l7-7 3 3-7 7-3-3z" fill="none" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" fill="none" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M2 2l7.586 7.586" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="11" cy="11" r="2" fill="none" stroke="#C9A961" stroke-width="2.5"/>
-  </g>
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="80" height="80" fill="black"/>
+  <circle cx="40" cy="40" r="28" fill="white"/>
+  <polygon points="40,15 50,35 40,40 30,35" fill="black"/>
+  <polygon points="65,40 45,50 40,40 45,30" fill="black"/>
+  <polygon points="40,65 30,45 40,40 50,45" fill="black"/>
+  <polygon points="15,40 35,30 40,40 35,50" fill="black"/>
 </svg>
 
+<!-- <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+   <rect x="0" y="0" width="64" height="64" fill="white" stroke="#ddd" stroke-width="1.5"/>
+      <polygon points="0,48 21,21 43,37 64,48 64,64 0,64" fill="#888"/>
+      <polygon points="0,51 16,29 37,40 53,32 64,51 64,64 0,64" fill="#444"/>
+      <polygon points="0,53 24,35 45,45 64,53 64,64 0,64" fill="black"/>
+</svg> -->
