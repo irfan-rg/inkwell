@@ -20,7 +20,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PlusIcon, PencilSquareIcon, TrashIcon, ArchiveBoxIcon, CheckCircleIcon, CircleStackIcon, FolderIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, PencilSquareIcon, TrashIcon, ArchiveBoxIcon, CheckCircleIcon, FolderIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";

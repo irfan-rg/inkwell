@@ -7,7 +7,7 @@ interface PostSkeletonProps {
   borderless?: boolean;
 }
 
-export function PostSkeleton({ variant = "default", className, borderless }: PostSkeletonProps) {
+export function PostSkeleton({ className, borderless }: PostSkeletonProps) {
   return (
     <article
       className={cn(

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/trpc";
 import { createClient } from "@/lib/supabase/client";
-import { ArrowRightIcon, ArrowUpRightIcon, ChatBubbleLeftRightIcon} from "@heroicons/react/24/solid";
+import { ArrowRightIcon, ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { PostCard } from "@/components/blog/PostCard";
 import { PostListSkeleton } from "@/components/ui/post-skeleton";
 import { Navbar } from "@/components/layout/Navbar";
