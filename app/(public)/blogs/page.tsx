@@ -6,7 +6,7 @@ import { PostCard } from "@/components/blog/PostCard";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { SearchBar } from "@/components/blog/SearchBar";
 import { Button } from "@/components/ui/button";
-import { PostListSkeleton } from "@/components/ui/post-skeleton";
+import { PostSkeleton } from "@/components/ui/post-skeleton";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
 export default function BlogsPage() {
@@ -55,8 +55,8 @@ export default function BlogsPage() {
         <div className="lg:col-span-3 border-r border-border bg-background lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] overflow-y-auto">
           <div className="p-6 md:p-8 space-y-12">
             <div>
-              <h1 className="text-4xl font-display font-black tracking-tighter uppercase mb-2">
-                The<br />Archive
+              <h1 className="text-5xl font-display font-black tracking-tighter uppercase mb-2">
+                The Archive
               </h1>
               <p className="text-xs font-mono text-muted-foreground leading-relaxed border-l-2 border-primary pl-3 mt-4">
                 Curated thoughts, tutorials, and insights on modern development and design.
@@ -104,13 +104,15 @@ export default function BlogsPage() {
           {/* Posts Grid */}
           <div className="flex-1">
             {isLoading ? (
-              <div className="grid md:grid-cols-2 border-b border-border">
-                <PostListSkeleton count={6} />
+              <div className="grid md:grid-cols-2 border-b border-x border-border lg:border-l-0 bg-border gap-px">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <PostSkeleton key={i} borderless />
+                ))}
               </div>
             ) : posts.length > 0 ? (
-              <div className="grid md:grid-cols-2 border-b border-border">
+              <div className="grid md:grid-cols-2 border-b border-x border-border lg:border-l-0 bg-border gap-px">
                 {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
+                  <PostCard key={post.id} post={post} borderless />
                 ))}
               </div>
             ) : (

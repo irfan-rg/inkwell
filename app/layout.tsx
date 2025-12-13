@@ -10,6 +10,7 @@ const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
   display: 'swap',
+  fallback: ['Georgia', 'serif'],
 });
 
 // Monospace for technical elements
@@ -17,6 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  fallback: ['Courier New', 'monospace'],
 });
 
 // Blog Title Font
@@ -24,6 +26,7 @@ const syne = Syne({
   subsets: ['latin'],
   variable: '--font-syne',
   display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
 });
 
 // Blog Content Font
@@ -31,6 +34,7 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
 });
 
 export const metadata: Metadata = {

@@ -1,9 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@plugin "tailwindcss-animate";
-@plugin "@tailwindcss/typography";
-
 /* THIS IS CRITICAL - Fix the dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
 

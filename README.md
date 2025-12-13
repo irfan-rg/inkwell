@@ -1,10 +1,10 @@
 <div align="center">
-  <h1>Inkwell</h1>
+  <h1>Inky</h1>
   <p><strong>Modern Blogging Platform</strong></p>
   <p>A full-stack Multi-User Blogging platform built with Next.js 15, featuring Markdown Support, Category Management, and a refined Editorial Design system.</p>
 <br>
 <p>
-    <img src="https://inkwelll.vercel.app/favicon.svg" alt="Inkwell Logo" width="40" height="40"/>
+    <img src="https://inkwelll.vercel.app/favicon.svg" alt="Inky Logo" width="40" height="40"/>
 </p>
   <p>
     <a href="https://inkwelll.vercel.app" target="_blank">

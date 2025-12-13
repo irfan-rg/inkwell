@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Optimize font loading and prevent build failures
+  experimental: {
+    optimizePackageImports: ['@heroicons/react'],
+  },
 };
 
 export default nextConfig;

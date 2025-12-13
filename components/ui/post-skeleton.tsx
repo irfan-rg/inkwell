@@ -1,14 +1,24 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 interface PostSkeletonProps {
   variant?: "default" | "compact";
+  className?: string;
+  borderless?: boolean;
 }
 
-export function PostSkeleton({ variant = "default" }: PostSkeletonProps) {
+export function PostSkeleton({ variant = "default", className, borderless }: PostSkeletonProps) {
   return (
-    <article className="group border-2 border-foreground bg-background transition-all hover:border-foreground/60">
+    <article
+      className={cn(
+        borderless
+          ? "group bg-background"
+          : "group border border-border bg-background transition-colors hover:border-primary",
+        className
+      )}
+    >
       {/* Cover Image Skeleton */}
-      <div className="aspect-video border-b-2 border-foreground bg-muted/20 animate-pulse" />
+      <div className="aspect-video border-b border-border bg-muted/20 animate-pulse" />
       
       <div className="p-6 space-y-4">
         {/* Category */}

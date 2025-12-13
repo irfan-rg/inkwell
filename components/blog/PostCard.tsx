@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { formatDate, calculateReadingTime } from "@/lib/utils";
+import { calculateReadingTime, cn, formatDate } from "@/lib/utils";
 
 interface PostCardProps {
   post: {
@@ -25,14 +25,23 @@ interface PostCardProps {
   };
   variant?: "default" | "compact";
   showAuthor?: boolean;
+  className?: string;
+  borderless?: boolean;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, className, borderless }: PostCardProps) {
   const readingTime = post.content ? calculateReadingTime(post.content) : null;
   const category = post.postCategories?.[0]?.category;
 
   return (
-    <div className="group h-full flex flex-col border border-border bg-background hover:border-primary transition-colors duration-300">
+    <div
+      className={cn(
+        borderless
+          ? "group h-full flex flex-col bg-background"
+          : "group h-full flex flex-col border border-border bg-background hover:border-primary transition-colors duration-300",
+        className
+      )}
+    >
       <Link href={`/blogs/${post.slug}`} className="block relative aspect-3/2 overflow-hidden border-b border-border">
         {post.coverImage ? (
           <Image
