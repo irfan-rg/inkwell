@@ -181,7 +181,7 @@ export function Navbar() {
               href="/blogs" 
               onClick={closeMobileMenu}
               className={cn(
-                "px-4 py-3 text-sm font-bold uppercase tracking-wider rounded transition-colors",
+                "px-4 py-3 text-sm font-mono font-bold uppercase tracking-wider rounded transition-colors",
                 pathname.startsWith('/blogs') ? "bg-foreground text-background" : "hover:bg-muted/50"
               )}
             >
@@ -194,7 +194,7 @@ export function Navbar() {
                 href="/dashboard" 
                 onClick={closeMobileMenu}
                 className={cn(
-                  "px-4 py-3 text-sm font-bold uppercase tracking-wider rounded transition-colors",
+                  "px-4 py-3 text-sm font-mono font-bold uppercase tracking-wider rounded transition-colors",
                   pathname.startsWith('/dashboard') ? "bg-foreground text-background" : "hover:bg-muted/50"
                 )}
               >

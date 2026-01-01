@@ -124,17 +124,17 @@ export default function BlogsPage() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="p-8 flex justify-between items-center bg-background">
+          <div className="p-4 sm:p-8 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center items-stretch bg-background">
             <Button
               variant="outline"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
+              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-full sm:w-32"
             >
               <ArrowLeftIcon className="mr-2 h-3 w-3" /> Previous
             </Button>
             
-            <span className="font-mono text-xs font-bold">
+            <span className="font-mono text-xs font-bold text-center">
               Page {currentPage}
             </span>
 
@@ -142,7 +142,7 @@ export default function BlogsPage() {
               variant="outline"
               onClick={() => setCurrentPage((p) => p + 1)}
               disabled={!hasMore}
-              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-32"
+              className="rounded-none border-foreground hover:bg-foreground hover:text-background font-mono text-xs uppercase tracking-widest h-10 w-full sm:w-32"
             >
               Next <ArrowRightIcon className="ml-2 h-3 w-3" />
             </Button>

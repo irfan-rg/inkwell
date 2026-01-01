@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, JetBrains_Mono, Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { OverflowDebugger } from "@/components/dev/OverflowDebugger";
 
 // Display font for headings and brand
 const playfair = Playfair_Display({
@@ -50,6 +51,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,6 +79,7 @@ export default function RootLayout({
           >
             {children}
             <Toaster />
+            {process.env.NODE_ENV === "development" ? <OverflowDebugger /> : null}
           </ThemeProvider>
         </TRPCProvider>
       </body>

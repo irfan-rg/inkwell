@@ -18,7 +18,7 @@ export function MarkdownGuide() {
           Markdown Guide
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl font-bold uppercase">Markdown Guide</DialogTitle>
           <DialogDescription>
@@ -26,11 +26,11 @@ export function MarkdownGuide() {
           </DialogDescription>
         </DialogHeader>
         
-        <div className="grid grid-cols-2 gap-8 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mt-4">
           <div className="space-y-6">
             <div>
               <h4 className="font-bold mb-2 text-sm">Headers</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 # Heading 1{'\n'}
                 ## Heading 2{'\n'}
                 ### Heading 3
@@ -39,7 +39,7 @@ export function MarkdownGuide() {
             
             <div>
               <h4 className="font-bold mb-2 text-sm">Emphasis</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 *Italic*{'\n'}
                 **Bold**{'\n'}
                 ~~Strikethrough~~
@@ -48,7 +48,7 @@ export function MarkdownGuide() {
 
             <div>
               <h4 className="font-bold mb-2 text-sm">Lists</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 - Item 1{'\n'}
                 - Item 2{'\n'}
                 {'\n'}
@@ -61,7 +61,7 @@ export function MarkdownGuide() {
           <div className="space-y-6">
             <div>
               <h4 className="font-bold mb-2 text-sm">Links & Images</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 [Link Text](url){'\n'}
                 ![Alt Text](image-url)
               </pre>
@@ -69,7 +69,7 @@ export function MarkdownGuide() {
 
             <div>
               <h4 className="font-bold mb-2 text-sm">Code</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 `inline code`{'\n'}
                 {'\n'}
                 ```language{'\n'}
@@ -80,7 +80,7 @@ export function MarkdownGuide() {
 
             <div>
               <h4 className="font-bold mb-2 text-sm">Quotes</h4>
-              <pre className="bg-muted p-2 rounded text-xs font-mono">
+              <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto max-w-full">
                 &gt; Blockquote
               </pre>
             </div>

@@ -2,8 +2,8 @@
 
 import { use } from "react";
 import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { api } from "@/lib/trpc";
 import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
 import { PostCard } from "@/components/blog/PostCard";
@@ -20,6 +20,15 @@ interface BlogPostPageProps {
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = use(params);
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push("/blogs");
+  };
   
   const { data: post, isLoading, error } = api.post.getBySlug.useQuery({
     slug: slug,
@@ -73,13 +82,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="border-b border-border">
         {/* Top Row: Navigation & Title */}
         <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-border">
-          <div className="lg:col-span-1 border-r border-border p-6 flex items-center justify-center">
-            <Link 
-              href="/blogs" 
+          <div className="hidden lg:flex lg:col-span-1 border-r border-border p-6 items-center justify-center">
+            <button
+              type="button"
+              onClick={handleBack}
               className="inline-flex items-center gap-2 text-xs font-bold font-mono uppercase tracking-widest hover:text-foreground/60 transition-colors"
             >
               <ArrowLeftIcon className="h-3 w-3" /> Back
-            </Link>
+            </button>
           </div>
           <div className="lg:col-span-11 p-8 lg:p-12">
             <h1 
@@ -91,7 +101,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* Info Grid Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
+        <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-border">
           <div className="p-4 text-center">
             <span className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Author</span>
             <span className="font-display font-bold text-lg">{post.authorName}</span>
@@ -138,8 +148,17 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               
               {/* Share Buttons */}
               <div className="pt-4">
-                <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60 mb-3 text-right">
-                  Share
+                <div className="flex items-center justify-between mb-3">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="lg:hidden inline-flex items-center gap-2 text-xs font-bold font-mono uppercase tracking-widest text-muted-foreground hover:opacity-60 transition-opacity"
+                  >
+                    <ArrowLeftIcon className="h-3 w-3" /> Back
+                  </button>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">
+                    Share
+                  </div>
                 </div>
                 <div className="flex gap-4 justify-end">
                   <button 
@@ -215,7 +234,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
         
         <div className="col-span-1 lg:col-span-6 border-r border-border">
-          <div className="px-6 py-12 md:px-12 md:py-16">
+          <div className="px-4 py-8 md:px-12 md:py-16">
             <div className="prose prose-lg dark:prose-invert max-w-none 
               prose-headings:font-display prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-tight
               prose-p:font-sans prose-p:leading-relaxed prose-p:text-lg

@@ -173,11 +173,11 @@ export default function DashboardPage() {
           </p>
         </div>
         
-        <div className="flex gap-4">
+        <div className="flex w-full md:w-auto gap-4">
           <Button 
             asChild 
             variant="outline"
-            className="rounded-none h-12 px-6 border-foreground text-foreground hover:bg-foreground hover:text-background font-bold uppercase tracking-widest text-xs transition-colors"
+            className="flex-1 md:flex-none rounded-none h-12 px-6 border-foreground text-foreground hover:bg-foreground hover:text-background font-bold uppercase tracking-widest text-xs transition-colors"
           >
             <Link href="/dashboard/categories">
               <FolderIcon className="mr-2 h-4 w-4" /> Topics
@@ -186,7 +186,7 @@ export default function DashboardPage() {
           
           <Button
             asChild
-            className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-foreground/80 font-bold uppercase tracking-widest text-xs transition-colors"
+            className="flex-1 md:flex-none rounded-none h-12 px-8 bg-foreground text-background hover:bg-foreground/80 font-bold uppercase tracking-widest text-xs transition-colors"
           >
             <Link href="/dashboard/new">
               <PlusIcon className="mr-2 h-4 w-4" /> New Entry

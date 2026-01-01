@@ -147,7 +147,10 @@ export function PostForm({ postId, initialData }: PostFormProps) {
   return (
     <div className="max-w-[1200px] mx-auto pb-32">
       {/* Top Bar */}
-      <div className="flex items-center justify-between py-6 mb-8 border-b border-border sticky top-16 z-40 " style={{ backgroundColor: 'hsl(var(--background))' }}>
+      <div
+        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-6 mb-8 border-b border-border sticky top-16 z-40"
+        style={{ backgroundColor: 'hsl(var(--background))' }}
+      >
         <Button
           variant="ghost"
           onClick={() => router.back()}
@@ -156,21 +159,23 @@ export function PostForm({ postId, initialData }: PostFormProps) {
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
         </Button>
-        <div className="flex gap-4 items-center">
-          <MarkdownGuide />
-          <div className="w-px h-4 bg-border mx-2" />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+          <div className="self-start sm:self-auto">
+            <MarkdownGuide />
+          </div>
+          <div className="hidden sm:block w-px h-4 bg-border mx-2" />
           <Button
             variant="ghost"
             onClick={() => handleSubmit(false)}
             disabled={isLoading}
-            className="rounded-none font-bold uppercase tracking-widest text-xs hover:bg-muted"
+            className="w-full sm:w-auto rounded-none font-bold uppercase tracking-widest text-xs hover:bg-muted"
           >
             {isLoading && actionType === "draft" ? "Saving..." : "Save Draft"}
           </Button>
           <Button
             onClick={() => handleSubmit(true)}
             disabled={isLoading}
-            className="rounded-none bg-foreground text-background hover:bg-foreground/90 hover:text-background font-bold uppercase tracking-widest text-xs h-10 px-6"
+            className="w-full sm:w-auto rounded-none bg-foreground text-background hover:bg-foreground/90 hover:text-background font-bold uppercase tracking-widest text-xs h-10 px-6"
           >
             {isLoading && actionType === "publish" ? (
               <ArrowPathIcon className="h-4 w-4 animate-spin" />

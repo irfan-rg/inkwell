@@ -42,7 +42,7 @@ export default function LandingPage() {
       <section className="border-b border-foreground">
         <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[81vh]">
           {/* Main Statement */}
-          <div className="lg:col-span-8 flex flex-col items-center justify-center p-8 lg:p-24 border-b lg:border-b-0 lg:border-r border-foreground bg-background">
+          <div className="lg:col-span-8 flex flex-col items-center justify-center p-6 lg:p-24 border-b lg:border-b-0 lg:border-r border-foreground bg-background">
             <div className="flex flex-col items-center justify-center w-full">
               
               <h1 className="font-display text-[14vw] md:text-[8rem] font-black uppercase tracking-tight text-foreground text-center mb-8 mt-8">
@@ -78,7 +78,7 @@ export default function LandingPage() {
               <Button 
                 size="default" 
                 asChild 
-                className="mt-4 h-12 w-auto lg:w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto"
+                className="mt-4 h-12 w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto"
               >
                 <Link href={startWritingHref} className="flex items-center">
                   Initialize <ArrowRightIcon className="ml-2 h-4 w-4" />
@@ -192,21 +192,21 @@ export default function LandingPage() {
       {/* --- FOOTER CTA --- */}
       <section className="border-t border-foreground grid lg:grid-cols-2">
         {/* Left - Inverted */}
-        <div className="section-inverted border-b lg:border-b-0 lg:border-r border-inverted p-16 lg:p-32">
+        <div className="section-inverted border-b lg:border-b-0 lg:border-r border-inverted p-10 sm:p-12 md:p-16 lg:p-32">
           <h2 className="text-5xl md:text-7xl font-display font-black leading-tight uppercase tracking-tighter mb-8 text-inverted">
             Ready to<br/>Publish?
           </h2>
           <Button 
             size="lg" 
             asChild 
-            className="btn-inverted rounded-none h-16 px-10 text-lg font-bold uppercase tracking-widest"
+            className="btn-inverted w-full sm:w-auto rounded-none h-16 px-10 text-lg font-bold uppercase tracking-widest"
           >
             <Link href={startWritingHref}>Join the Platform</Link>
           </Button>
         </div>
         
         {/* Right - Normal */}
-        <div className="p-16 lg:p-32 bg-background text-foreground flex flex-col justify-center">
+        <div className="p-10 sm:p-12 md:p-16 lg:p-32 bg-background text-foreground flex flex-col justify-center">
 
           <div className="mb-8 text-foreground">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-quote-icon lucide-quote" style={{ transform: "scaleX(-1)" }}>

@@ -30,7 +30,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       const inline = !language;
 
       return !inline && language ? (
-        <div className="relative my-4">
+        <div className="relative my-4 overflow-x-auto max-w-full">
           {/* Language label */}
           {language && (
             <div className="absolute right-0 top-0 border-l border-b border-border bg-muted px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -49,7 +49,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
         </div>
       ) : (
         <code
-          className="rounded-none bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground border border-border/50"
+          className="rounded-none bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground border border-border/50 whitespace-pre-wrap break-all max-w-full"
           {...props}
         >
           {children}
@@ -132,7 +132,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
 
     // Custom blockquote styles
     blockquote: ({ children }) => (
-      <blockquote className="my-6 border-l-4 border-primary pl-6 italic text-muted-foreground font-sans text-xl leading-relaxed">
+      <blockquote className="my-6 border-l-4 border-primary pl-6 italic text-muted-foreground font-mono text-sm leading-relaxed">
         {children}
       </blockquote>
     ),
