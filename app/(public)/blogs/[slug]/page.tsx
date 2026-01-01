@@ -148,7 +148,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               
               {/* Share Buttons */}
               <div className="pt-4">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between lg:justify-end mb-3">
                   <button
                     type="button"
                     onClick={handleBack}
