@@ -54,7 +54,7 @@ export default function LandingPage() {
                   [EST. 2025]
                 </p>
 
-                <p className="font-mono font-semibold text-xs md:text-sm text-muted-foreground text-center">
+                <p className="font-mono font-semibold text-xs md:text-sm text-muted-foreground text-center leading-relaxed">
                   A PLATFORM FOR THOUGHT. DESIGNED FOR CLARITY. BUILT FOR WRITERS
                 </p>
               </div>
@@ -78,10 +78,11 @@ export default function LandingPage() {
               <Button 
                 size="default" 
                 asChild 
-                className="mt-4 h-12 w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto"
+                className="mt-4 h-12 w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto font-display"
               >
                 <Link href={startWritingHref} className="flex items-center">
-                  Initialize <ArrowRightIcon className="ml-2 h-4 w-4" />
+                  Initialize
+                   {/* <ArrowRightIcon className="ml-2 h-4 w-4" /> */}
                 </Link>
               </Button>
             </div>
@@ -101,7 +102,7 @@ export default function LandingPage() {
               <Button 
                 size="default" 
                 asChild 
-                className="mt-4 h-12 w-auto lg:w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto"
+                className="mt-4 h-12 w-auto lg:w-full text-sm uppercase tracking-wider font-bold btn-inverted rounded-none self-end lg:self-auto font-display"
               >
                 <Link href="/blogs" className="flex items-center">
                   Explore Archive
@@ -162,7 +163,7 @@ export default function LandingPage() {
             <h2 className="text-6xl md:text-9xl font-display font-black tracking-tighter uppercase">
               Fresh Ink
             </h2>
-            <Link href="/blogs" className="group flex items-center text-base font-bold uppercase tracking-widest hover:text-foreground/60 transition-colors mt-6 md:mt-0 mb-2">
+            <Link href="/blogs" className="group flex items-center text-sm md:text-base font-bold uppercase tracking-widest hover:text-foreground/60 transition-colors mt-6 md:mt-0 mb-2">
               View Complete Archive
               <ArrowUpRightIcon className="ml-2 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-0.5" />
             </Link>

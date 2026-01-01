@@ -49,14 +49,21 @@ export function Footer() {
         {/* Brand Column */}
         <div className="md:col-span-1 p-6 md:p-8 flex flex-col justify-between h-full">
           <div>
-            <span className="block font-mono text-xs uppercase tracking-widest text-muted-foreground mb-12">Platform</span>
-            <div className="flex flex-wrap items-center gap-2 mb-2 min-w-0">
-              <Image src="/favicon.svg" alt="Inkwell" width={32} height={32} onClick={() => window.location.href = "/"} className="cursor-pointer mt-1"/>
-              <Link href="/" className="font-display font-bold text-4xl tracking-tighter uppercase mb-0 break-words">InkWell.</Link>
+            <span className="block font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6 md:mb-12">Platform</span>
+            <div className="flex flex-nowrap items-center gap-3 mb-2 min-w-0">
+              <Link href="/" className="shrink-0" aria-label="Home">
+                <Image src="/favicon.svg" alt="Inkwell" width={32} height={32} className="cursor-pointer" />
+              </Link>
+              <Link
+                href="/"
+                className="font-display font-bold text-4xl tracking-tighter uppercase mb-0 leading-none whitespace-nowrap"
+              >
+                InkWell .
+              </Link>
             </div>
             
           </div>
-          <p className="text-xs font-mono text-muted-foreground mt-auto">
+          <p className="text-xs font-mono text-muted-foreground mt-6 md:mt-auto">
             &copy; 2025 Inkwell Inc.<br/>
             All Rights Reserved.
           </p>

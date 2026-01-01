@@ -161,7 +161,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto min-h-screen pb-20">
+    <div className="mx-auto max-w-5xl space-y-6 pb-20">
       {/* 1. STUDIO HEADER */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 border-b border-border pb-8">
         <div>

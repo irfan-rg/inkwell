@@ -94,7 +94,7 @@ export function Navbar() {
           className="font-display text-2xl font-black tracking-tighter text-foreground hover:text-foreground/60 transition-colors"
           onClick={closeMobileMenu}
         >
-          INKWELL.
+          INKWELL .
         </Link>
 
         {/* Center: Desktop Nav */}

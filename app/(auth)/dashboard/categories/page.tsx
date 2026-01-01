@@ -166,32 +166,33 @@ export default function CategoriesPage() {
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="max-w-[1600px] mx-auto min-h-screen pb-20">
-      <div className="mb-6">
+    <div className="mx-auto max-w-5xl space-y-6 pb-20">
+      {/* Title */}
+      <div className="space-y-2">
+        <h1 className="text-3xl font-display font-bold tracking-tight uppercase">Topics</h1>
+        <p className="text-muted-foreground font-mono text-xs uppercase tracking-widest">
+          Organize your content structure
+        </p>
+      </div>
+
+      {/* Action Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Button
           variant="ghost"
           asChild
-          className="rounded-none hover:bg-transparent hover:text-primary pl-0 text-muted-foreground font-mono text-xs uppercase tracking-widest"
+          className="rounded-none hover:bg-transparent hover:text-primary pl-0 text-muted-foreground font-mono text-xs uppercase tracking-widest w-fit"
         >
           <Link href="/dashboard">
             <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
           </Link>
         </Button>
-      </div>
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 border-b border-border pb-8">
-        <div>
-          <h1 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.8] mb-4">
-            Topics
-          </h1>
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Organize your content structure
-          </p>
-        </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={handleCreate} className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-xs transition-colors">
+            <Button
+              onClick={handleCreate}
+              className="rounded-none h-12 px-8 bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-xs transition-colors w-full sm:w-auto"
+            >
               <PlusIcon className="mr-2 h-4 w-4" />
               New Topic
             </Button>
@@ -275,7 +276,7 @@ export default function CategoriesPage() {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-display font-bold text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-display font-bold text-foreground group-hover:text-primary transition-colors uppercase">
                     {category.name}
                   </h3>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground border border-border px-2 py-0.5">

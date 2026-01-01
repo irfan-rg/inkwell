@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,10 @@ interface PostFormProps {
 
 export function PostForm({ postId, initialData }: PostFormProps) {
   const router = useRouter();
+
+  const [hideMobileActionBar, setHideMobileActionBar] = useState(false);
+  const lastScrollYRef = useRef(0);
+  const hideRef = useRef(false);
   
   // Form state
   const [title, setTitle] = useState(initialData?.title || "");
@@ -144,13 +148,64 @@ export function PostForm({ postId, initialData }: PostFormProps) {
 
   const isLoading = createPost.isPending || updatePost.isPending;
 
+  useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+
+    let raf = 0;
+
+    const compute = () => {
+      const isMobile = window.innerWidth < 640;
+      const y = window.scrollY;
+
+      if (!isMobile) {
+        if (hideRef.current) {
+          hideRef.current = false;
+          setHideMobileActionBar(false);
+        }
+        lastScrollYRef.current = y;
+        return;
+      }
+
+      const delta = y - lastScrollYRef.current;
+      const threshold = 80;
+      const dirThreshold = 12;
+
+      let nextHide = hideRef.current;
+      if (y <= threshold) nextHide = false;
+      else if (delta > dirThreshold) nextHide = true;
+      else if (delta < -dirThreshold) nextHide = false;
+
+      if (nextHide !== hideRef.current) {
+        hideRef.current = nextHide;
+        setHideMobileActionBar(nextHide);
+      }
+
+      lastScrollYRef.current = y;
+    };
+
+    const onScrollOrResize = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        compute();
+      });
+    };
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    compute();
+
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className="max-w-[1200px] mx-auto pb-32">
-      {/* Top Bar */}
-      <div
-        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-6 mb-8 border-b border-border sticky top-16 z-40"
-        style={{ backgroundColor: 'hsl(var(--background))' }}
-      >
+      {/* Mobile-only Back button (non-sticky) */}
+      <div className="sm:hidden pt-0">
         <Button
           variant="ghost"
           onClick={() => router.back()}
@@ -159,30 +214,52 @@ export function PostForm({ postId, initialData }: PostFormProps) {
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
         </Button>
+      </div>
+
+      {/* Top Bar */}
+      <div
+        className={
+          "flex flex-col gap-4 sm:gap-0 items-start sm:flex-row sm:items-center sm:justify-between py-3 mb-8 border-b border-border sticky top-16 z-40 transition-transform duration-200 will-change-transform " +
+          (hideMobileActionBar ? "-translate-y-full pointer-events-none sm:translate-y-0 sm:pointer-events-auto" : "translate-y-0")
+        }
+        style={{ backgroundColor: 'hsl(var(--background))' }}
+      >
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          disabled={isLoading}
+          className="hidden sm:inline-flex self-start rounded-none hover:bg-transparent hover:text-foreground pl-0 text-muted-foreground font-mono text-xs uppercase tracking-widest cursor-pointer"
+        >
+          <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back to Studio
+        </Button>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
           <div className="self-start sm:self-auto">
             <MarkdownGuide />
           </div>
           <div className="hidden sm:block w-px h-4 bg-border mx-2" />
-          <Button
-            variant="ghost"
-            onClick={() => handleSubmit(false)}
-            disabled={isLoading}
-            className="w-full sm:w-auto rounded-none font-bold uppercase tracking-widest text-xs hover:bg-muted"
-          >
-            {isLoading && actionType === "draft" ? "Saving..." : "Save Draft"}
-          </Button>
-          <Button
-            onClick={() => handleSubmit(true)}
-            disabled={isLoading}
-            className="w-full sm:w-auto rounded-none bg-foreground text-background hover:bg-foreground/90 hover:text-background font-bold uppercase tracking-widest text-xs h-10 px-6"
-          >
-            {isLoading && actionType === "publish" ? (
-              <ArrowPathIcon className="h-4 w-4 animate-spin" />
-            ) : (
-              "Publish"
-            )}
-          </Button>
+
+          {/* Mobile: 2-button row; Desktop: original inline layout */}
+          <div className="grid grid-cols-2 gap-3 w-full sm:w-auto sm:flex sm:items-center sm:gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => handleSubmit(false)}
+              disabled={isLoading}
+              className="w-full sm:w-auto rounded-none font-bold uppercase tracking-widest text-xs hover:bg-muted px-3 sm:px-5"
+            >
+              {isLoading && actionType === "draft" ? "Saving..." : "Save Draft"}
+            </Button>
+            <Button
+              onClick={() => handleSubmit(true)}
+              disabled={isLoading}
+              className="w-full sm:w-auto rounded-none bg-foreground text-background hover:bg-foreground/90 hover:text-background font-bold uppercase tracking-widest text-xs px-3 sm:px-6"
+            >
+              {isLoading && actionType === "publish" ? (
+                <ArrowPathIcon className="h-4 w-4 animate-spin" />
+              ) : (
+                "Publish"
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
