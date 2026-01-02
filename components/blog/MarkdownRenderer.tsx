@@ -30,7 +30,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       const inline = !language;
 
       return !inline && language ? (
-        <div className="relative my-4 overflow-x-auto max-w-full">
+        <div className="relative">
           {/* Language label */}
           {language && (
             <div className="absolute right-0 top-0 border-l border-b border-border bg-muted px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -49,7 +49,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
         </div>
       ) : (
         <code
-          className="rounded-none bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground border border-border/50 whitespace-pre-wrap break-all max-w-full"
+          className="rounded-none bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground border border-border/50 wrap-break-words whitespace-pre-wrap max-w-full"
           {...props}
         >
           {children}
@@ -104,10 +104,10 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
           href={href}
           target={isExternal ? "_blank" : undefined}
           rel={isExternal ? "noopener noreferrer" : undefined}
-          className="text-foreground underline decoration-foreground/30 transition-colors hover:decoration-foreground decoration-2 underline-offset-4"
+          className="text-foreground underline decoration-foreground/30 transition-colors hover:decoration-foreground decoration-2 underline-offset-4 wrap-break-word"
         >
           {children}
-          {isExternal && <span className="ml-1 text-[10px] align-top">↗</span>}
+          {isExternal && <span className="ml-1 text-[10px] align-top wrap-break-word">↗</span>}
         </a>
       );
     },
