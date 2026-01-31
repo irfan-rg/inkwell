@@ -4,7 +4,6 @@ import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { OverflowDebugger } from "@/components/dev/OverflowDebugger";
 
 // Display font for headings and brand
 const playfair = Playfair_Display({
@@ -79,7 +78,6 @@ export default function RootLayout({
           >
             {children}
             <Toaster />
-            {process.env.NODE_ENV === "development" ? <OverflowDebugger /> : null}
           </ThemeProvider>
         </TRPCProvider>
       </body>

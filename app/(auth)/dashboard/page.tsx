@@ -20,7 +20,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PlusIcon, PencilSquareIcon, TrashIcon, ArchiveBoxIcon, CheckCircleIcon, FolderIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, PencilIcon, TrashIcon, DocumentTextIcon, ArchiveBoxIcon, CheckCircleIcon, FolderIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -297,26 +297,37 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
-                    <Button size="icon" variant="ghost" asChild className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background">
+                  <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                    <Button 
+                      variant="ghost" 
+                      asChild 
+                      className="h-9 px-3 rounded-none hover:bg-foreground hover:text-background gap-2"
+                    >
                       <Link href={`/dashboard/edit/${post.id}`}>
-                        <PencilSquareIcon className="h-5 w-5" />
+                        <DocumentTextIcon className="h-4 w-4" />
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Edit</span>
                       </Link>
                     </Button>
 
                     <Button
-                      size="icon"
                       variant="ghost"
                       onClick={() => handleToggleArchive(post.id, post.archived)}
-                      className="h-9 w-9 rounded-none hover:bg-foreground hover:text-background"
+                      className="h-9 px-3 rounded-none hover:bg-foreground hover:text-background gap-2"
                     >
-                      <ArchiveBoxIcon className="h-5 w-5" />
+                      <ArchiveBoxIcon className="h-4 w-4" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                        {post.archived ? "Restore" : "Archive"}
+                      </span>
                     </Button>
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button size="icon" variant="ghost" className="h-9 w-9 rounded-none hover:bg-destructive hover:text-destructive-foreground">
-                          <TrashIcon className="h-5 w-5" />
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 rounded-none hover:bg-destructive hover:text-destructive-foreground gap-2"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Delete</span>
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="rounded-none border-2 border-foreground p-8 max-w-sm">
